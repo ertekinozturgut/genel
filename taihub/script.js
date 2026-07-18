@@ -110,9 +110,9 @@
     ctx.lineWidth = (opts.lw || 6) * dpr;
     ctx.lineCap = 'round';
     ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2);
-    ctx.strokeStyle = getVar('--surface-3'); ctx.stroke();
+    ctx.strokeStyle = 'rgba(120,150,220,0.14)'; ctx.stroke();
     ctx.beginPath(); ctx.arc(cx, cy, r, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * pct);
-    ctx.strokeStyle = color; ctx.stroke();
+    ctx.strokeStyle = color; ctx.shadowColor = color; ctx.shadowBlur = 8 * dpr; ctx.stroke(); ctx.shadowBlur = 0;
     if (opts.label) {
       ctx.fillStyle = getVar('--text'); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       ctx.font = `600 ${opts.fs || 20 * dpr}px 'IBM Plex Sans'`;
@@ -141,7 +141,7 @@
     values.forEach((v, i) => {
       const bh = (v / max) * (bottom - top);
       const x = pad + i * bw + bw * 0.22, bwid = bw * 0.56;
-      ctx.fillStyle = color; roundRect(ctx, x, bottom - bh, bwid, bh, 4 * dpr); ctx.fill();
+      ctx.fillStyle = color; ctx.shadowColor = color; ctx.shadowBlur = 10 * dpr; roundRect(ctx, x, bottom - bh, bwid, bh, 4 * dpr); ctx.fill(); ctx.shadowBlur = 0;
       ctx.fillStyle = getVar('--text-3'); ctx.textAlign = 'center'; ctx.font = `${10 * dpr}px 'IBM Plex Sans'`;
       ctx.fillText(labels[i], x + bwid / 2, bottom + 16 * dpr);
     });
@@ -158,7 +158,7 @@
     const step = (w - pad - 12 * dpr) / (series.length - 1);
     ctx.beginPath();
     series.forEach((v, i) => { const x = pad + i * step, y = bottom - (v / max) * (bottom - top); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); });
-    ctx.strokeStyle = color; ctx.lineWidth = 2.4 * dpr; ctx.lineJoin = 'round'; ctx.stroke();
+    ctx.strokeStyle = color; ctx.lineWidth = 2.4 * dpr; ctx.lineJoin = 'round'; ctx.shadowColor = color; ctx.shadowBlur = 12 * dpr; ctx.stroke(); ctx.shadowBlur = 0;
     ctx.lineTo(w - 6 * dpr, bottom); ctx.lineTo(pad, bottom); ctx.closePath();
     const grad = ctx.createLinearGradient(0, top, 0, bottom); grad.addColorStop(0, hexA(color, .18)); grad.addColorStop(1, hexA(color, 0));
     ctx.fillStyle = grad; ctx.fill();
@@ -171,7 +171,7 @@
     ctx.clearRect(0, 0, w, h);
     let a = -Math.PI / 2; const tot = data.reduce((s, d) => s + d.v, 0);
     data.forEach(d => { const sl = d.v / tot * Math.PI * 2; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.arc(cx, cy, r, a, a + sl); ctx.closePath(); ctx.fillStyle = d.c; ctx.fill(); a += sl; });
-    ctx.beginPath(); ctx.arc(cx, cy, r * 0.6, 0, Math.PI * 2); ctx.fillStyle = getVar('--surface'); ctx.fill();
+    ctx.beginPath(); ctx.arc(cx, cy, r * 0.6, 0, Math.PI * 2); ctx.fillStyle = getVar('--surface-solid'); ctx.fill();
   }
   function roundRect(ctx, x, y, w, h, r) { r = Math.min(r, w / 2, h / 2); ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
   function hexA(hex, a) { const c = hex.replace('#', ''); const n = parseInt(c.length === 3 ? c.split('').map(x => x + x).join('') : c, 16); return `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},${a})`; }
@@ -207,16 +207,38 @@
   document.addEventListener('click', e => { const g = e.target.closest('[data-goto]'); if (g) goto(g.dataset.goto); });
   $('#menu-btn').addEventListener('click', () => $('#sidebar').classList.toggle('open'));
 
-  /* ---------------- THEME ---------------- */
-  function applyTheme(t) {
-    document.documentElement.setAttribute('data-theme', t);
-    $('#theme-ico').innerHTML = t === 'dark'
-      ? '<path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8"/>'
-      : '<circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M4 12H2M22 12h-2M5 5l1.5 1.5M17.5 17.5 19 19M19 5l-1.5 1.5M6.5 17.5 5 19"/>';
+  /* ---------------- ACCENT (kırmızı ↔ cyan neon) ---------------- */
+  function applyAccent(a) {
+    document.documentElement.setAttribute('data-accent', a);
+    $('#theme-ico').innerHTML = '<path d="M12 3c3.2 4 6 7 6 11a6 6 0 0 1-12 0c0-4 2.8-7 6-11z"/>';
+    $('#theme-ico').setAttribute('fill', a === 'cyan' ? '#22e0ff' : '#ff2e43');
+    $('#theme-ico').setAttribute('stroke', 'none');
     redrawRings();
+    if ($('#v-credits').classList.contains('active')) drawCredits();
+    if ($('#v-admin').classList.contains('active')) drawAdminCharts();
   }
-  let theme = 'light'; applyTheme('light');
-  $('#theme-btn').addEventListener('click', () => { theme = theme === 'light' ? 'dark' : 'light'; applyTheme(theme); });
+  $('#theme-btn').setAttribute('title', 'Vurgu rengi: kırmızı / cyan');
+  let accent = 'red'; applyAccent('red');
+  $('#theme-btn').addEventListener('click', () => { accent = accent === 'red' ? 'cyan' : 'red'; applyAccent(accent); toast('Vurgu rengi', accent === 'cyan' ? 'Cyan neon' : 'Kırmızı neon', 'info'); });
+
+  /* ---------------- STARFIELD ---------------- */
+  function initStars() {
+    const c = $('#bg-stars'); if (!c) return;
+    const ctx = c.getContext('2d'); let w, h, stars = [];
+    function resize() { w = c.width = innerWidth; h = c.height = innerHeight; const n = Math.floor(w * h / 9000); stars = Array.from({ length: n }, () => ({ x: Math.random() * w, y: Math.random() * h, z: Math.random() * 1.3 + 0.3, r: Math.random() * 1.2 + 0.3, tw: Math.random() * 6.28 })); }
+    function draw() {
+      ctx.clearRect(0, 0, w, h);
+      const moving = !document.body.classList.contains('reduce-motion');
+      for (const s of stars) {
+        if (moving) { s.x -= s.z * 0.11; s.tw += 0.014; if (s.x < -3) s.x = w + 3; }
+        const a = 0.32 + Math.sin(s.tw) * 0.3;
+        ctx.globalAlpha = Math.max(0, a); ctx.fillStyle = '#a7c4ff';
+        ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, 6.28); ctx.fill();
+      }
+      ctx.globalAlpha = 1; requestAnimationFrame(draw);
+    }
+    addEventListener('resize', resize); resize(); draw();
+  }
 
   /* ---------------- NOTIFICATIONS ---------------- */
   $('#notif-list').innerHTML = NOTIFS.map(n => `<div class="notif-item"><div class="n-ic" style="background:${n.bg}">${n.ic}</div><div><b>${n.t}</b><p>${n.p}</p><div class="n-t">${n.time}</div></div></div>`).join('');
@@ -577,6 +599,7 @@
   renderDashboard(); renderShowcase(); renderAgents(); renderLibraries(); renderSolutions();
   renderMcp(); renderTraining(); renderCreditsStatic(); renderHistory(); renderAdmin();
   renderChat(); initChat();
+  initStars();
   redrawRings();
   window.addEventListener('resize', () => { redrawRings(); if ($('#v-credits').classList.contains('active')) drawCredits(); if ($('#v-admin').classList.contains('active')) drawAdminCharts(); });
 })();
