@@ -6,6 +6,14 @@
 (() => {
   'use strict';
 
+  // Shared 3D state. warpBoost is spiked by the warp button and decays every
+  // frame, letting the starfield and hologram briefly accelerate together.
+  let warpBoost = 0;
+  function accentRGB() {
+    return (getComputedStyle(document.documentElement)
+      .getPropertyValue('--accent-rgb').trim()) || '93,241,255';
+  }
+
   /* ---------------- BOOT SEQUENCE ---------------- */
   const bootLines = [
     '> NEXUS-9 ÇEKİRDEK BIOS v4.2.1 başlatılıyor...',
@@ -57,7 +65,7 @@
     }, 180);
   }
 
-  /* ---------------- STARFIELD BACKGROUND ---------------- */
+  /* ---------------- 3D WARP STARFIELD ---------------- */
   function initStarfield() {
     const canvas = document.getElementById('starfield');
     const ctx = canvas.getContext('2d');
@@ -65,34 +73,61 @@
     let w, h;
     let enabled = true;
 
+    // Each star lives in normalized 3D space: x,y in [-1,1], z depth in (0,1].
+    // z shrinks every frame so the star flies toward the camera; projecting
+    // x/z and y/z produces true perspective — and the gap between the previous
+    // and current projection is drawn as a warp streak.
+    function newStar(reset) {
+      return {
+        x: Math.random() * 2 - 1,
+        y: Math.random() * 2 - 1,
+        z: reset ? 1 : Math.random() * 0.9 + 0.1,
+        pz: 1,
+      };
+    }
+
     function resize() {
       w = canvas.width = window.innerWidth;
       h = canvas.height = window.innerHeight;
-      const count = Math.floor((w * h) / 3200);
-      stars = Array.from({ length: count }, () => ({
-        x: Math.random() * w,
-        y: Math.random() * h,
-        z: Math.random() * 1.6 + 0.2,
-        r: Math.random() * 1.4 + 0.3,
-        tw: Math.random() * Math.PI * 2,
-      }));
+      const count = Math.floor((w * h) / 6500);
+      stars = Array.from({ length: count }, () => newStar(false));
     }
 
     function draw() {
       ctx.clearRect(0, 0, w, h);
       if (!enabled) { requestAnimationFrame(draw); return; }
-      ctx.save();
+      const cx = w / 2, cy = h / 2;
+      const k = 150 * (w / 1600);
+      const speed = 0.0045 + warpBoost;
+
       for (const s of stars) {
-        s.x -= s.z * 0.18;
-        s.tw += 0.02;
-        if (s.x < -5) s.x = w + 5;
-        const alpha = 0.5 + Math.sin(s.tw) * 0.4;
+        s.pz = s.z;
+        s.z -= speed;
+        if (s.z < 0.04) { Object.assign(s, newStar(true)); continue; }
+
+        const sx = cx + (s.x / s.z) * k;
+        const sy = cy + (s.y / s.z) * k;
+        const px = cx + (s.x / s.pz) * k;
+        const py = cy + (s.y / s.pz) * k;
+
+        if (sx < -20 || sx > w + 20 || sy < -20 || sy > h + 20) continue;
+
+        const depth = 1 - s.z;
+        const alpha = Math.min(1, depth * 1.3);
+        const size = Math.max(0.4, depth * 2.2);
+
         ctx.beginPath();
-        ctx.fillStyle = `rgba(160, 220, 255, ${Math.max(0, alpha)})`;
-        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.moveTo(px, py);
+        ctx.lineTo(sx, sy);
+        ctx.strokeStyle = warpBoost > 0.01
+          ? `rgba(${accentRGB()}, ${alpha})`
+          : `rgba(175, 220, 255, ${alpha})`;
+        ctx.lineWidth = size;
+        ctx.stroke();
       }
-      ctx.restore();
+
+      warpBoost *= 0.94;
+      if (warpBoost < 0.001) warpBoost = 0;
       requestAnimationFrame(draw);
     }
 
@@ -685,6 +720,7 @@
     document.getElementById('warp-btn').addEventListener('click', () => {
       const overlay = document.getElementById('flash-overlay');
       overlay.classList.add('flash');
+      warpBoost = 0.06;   // spike the 3D warp starfield + spin the hologram
       toast('WARP SÜRÜCÜSÜ ETKİNLEŞTİRİLDİ — Işık hızına geçiliyor');
       setTimeout(() => overlay.classList.remove('flash'), 800);
     });
@@ -696,6 +732,233 @@
     document.getElementById('reboot-btn').addEventListener('click', () => {
       toast('Çekirdek yeniden başlatma dizisi kuyruğa alındı');
     });
+  }
+
+  /* ---------------- 3D HELPERS ---------------- */
+  // Rotate a point around the Y axis then the X axis.
+  function rotateXY(p, ry, rx) {
+    const cy = Math.cos(ry), sy = Math.sin(ry);
+    const x1 = p.x * cy + p.z * sy;
+    const z1 = -p.x * sy + p.z * cy;
+    const cx = Math.cos(rx), sx = Math.sin(rx);
+    const y1 = p.y * cx - z1 * sx;
+    const z2 = p.y * sx + z1 * cx;
+    return { x: x1, y: y1, z: z2 };
+  }
+  // Perspective projection. Front-facing points (negative z) sit closer.
+  function project3d(p, w, h, R, focal) {
+    const s = focal / (focal + p.z);
+    return { x: w / 2 + p.x * R * s, y: h / 2 + p.y * R * s, z: p.z, s };
+  }
+
+  /* ---------------- HOLOGRAM NAV SPHERE ---------------- */
+  function initHologram() {
+    const canvas = document.getElementById('holo-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const rotOut = document.getElementById('holo-rot');
+    const LAT = 12, LON = 24;
+    let ry = 0, t = 0;
+
+    // Fixed surface beacons scattered over the sphere (lat, lon in radians).
+    const beacons = Array.from({ length: 7 }, () => ({
+      phi: (Math.random() - 0.5) * Math.PI * 0.9,
+      th: Math.random() * Math.PI * 2,
+    }));
+
+    function resize() {
+      canvas.width = canvas.clientWidth * devicePixelRatio;
+      canvas.height = canvas.clientHeight * devicePixelRatio;
+    }
+
+    // Draw a projected polyline segment-by-segment, fading + thinning the
+    // parts of the mesh that face away from the camera for real depth.
+    function strokeDepth(pts, rgb) {
+      for (let k = 0; k < pts.length - 1; k++) {
+        const a = pts[k], b = pts[k + 1];
+        const zz = (a.z + b.z) / 2;              // -1 (front) .. 1 (back)
+        const front = 1 - (zz + 1) / 2;          // 1 front .. 0 back
+        ctx.strokeStyle = `rgba(${rgb}, ${0.1 + front * 0.55})`;
+        ctx.lineWidth = (0.5 + front * 1.2) * devicePixelRatio;
+        ctx.beginPath();
+        ctx.moveTo(a.x, a.y);
+        ctx.lineTo(b.x, b.y);
+        ctx.stroke();
+      }
+    }
+
+    function frame() {
+      const w = canvas.width, h = canvas.height;
+      if (w <= 20 || h <= 20) { requestAnimationFrame(frame); return; }
+      ctx.clearRect(0, 0, w, h);
+
+      const R = Math.min(w, h) * 0.34;
+      const focal = 3.2;
+      const rgb = accentRGB();
+      ry += 0.009 + warpBoost * 0.6;
+      t += 0.016;
+      const rx = -0.42 + Math.sin(t * 0.6) * 0.12;   // gentle nutation
+
+      // Parallels (latitude rings)
+      for (let i = 1; i < LAT; i++) {
+        const phi = -Math.PI / 2 + (Math.PI * i) / LAT;
+        const y = Math.sin(phi), r = Math.cos(phi);
+        const pts = [];
+        for (let j = 0; j <= LON; j++) {
+          const th = (2 * Math.PI * j) / LON;
+          pts.push(project3d(rotateXY({ x: r * Math.cos(th), y, z: r * Math.sin(th) }, ry, rx), w, h, R, focal));
+        }
+        strokeDepth(pts, rgb);
+      }
+      // Meridians (longitude lines)
+      for (let j = 0; j < LON; j += 2) {
+        const th = (2 * Math.PI * j) / LON;
+        const pts = [];
+        for (let i = 0; i <= LAT; i++) {
+          const phi = -Math.PI / 2 + (Math.PI * i) / LAT;
+          const y = Math.sin(phi), r = Math.cos(phi);
+          pts.push(project3d(rotateXY({ x: r * Math.cos(th), y, z: r * Math.sin(th) }, ry, rx), w, h, R, focal));
+        }
+        strokeDepth(pts, rgb);
+      }
+
+      // Tilted orbital ring + moving satellite
+      const ringPts = [];
+      for (let a = 0; a <= 64; a++) {
+        const ang = (a / 64) * Math.PI * 2;
+        ringPts.push(project3d(rotateXY({ x: Math.cos(ang) * 1.42, y: 0, z: Math.sin(ang) * 1.42 }, ry * 0.6, rx + 0.5), w, h, R, focal));
+      }
+      ctx.strokeStyle = `rgba(${rgb}, 0.35)`;
+      ctx.lineWidth = 1 * devicePixelRatio;
+      ctx.beginPath();
+      ringPts.forEach((p, i) => (i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y)));
+      ctx.stroke();
+
+      const satAng = t * 1.2;
+      const sat = project3d(rotateXY({ x: Math.cos(satAng) * 1.42, y: 0, z: Math.sin(satAng) * 1.42 }, ry * 0.6, rx + 0.5), w, h, R, focal);
+      ctx.fillStyle = `rgba(255,210,93,0.95)`;
+      ctx.shadowColor = 'rgba(255,210,93,0.9)';
+      ctx.shadowBlur = 12 * devicePixelRatio;
+      ctx.beginPath();
+      ctx.arc(sat.x, sat.y, 4 * devicePixelRatio, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.shadowBlur = 0;
+
+      // Surface beacons — only render when on the near face
+      beacons.forEach((b) => {
+        const y = Math.sin(b.phi), r = Math.cos(b.phi);
+        const p = rotateXY({ x: r * Math.cos(b.th), y, z: r * Math.sin(b.th) }, ry, rx);
+        if (p.z > 0.15) return;
+        const pr = project3d(p, w, h, R, focal);
+        const pulse = 0.5 + Math.sin(t * 3 + b.th) * 0.5;
+        ctx.fillStyle = `rgba(${rgb}, ${0.5 + pulse * 0.5})`;
+        ctx.shadowColor = `rgba(${rgb}, 0.9)`;
+        ctx.shadowBlur = 8 * devicePixelRatio;
+        ctx.beginPath();
+        ctx.arc(pr.x, pr.y, (2 + pulse * 1.5) * devicePixelRatio, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      });
+
+      // Glowing core
+      ctx.fillStyle = `rgba(${rgb}, 0.9)`;
+      ctx.shadowColor = `rgba(${rgb}, 1)`;
+      ctx.shadowBlur = 22 * devicePixelRatio;
+      ctx.beginPath();
+      ctx.arc(w / 2, h / 2, 3 * devicePixelRatio, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.shadowBlur = 0;
+
+      if (rotOut) rotOut.textContent = ((ry * 180 / Math.PI) % 360).toFixed(1) + '°';
+      requestAnimationFrame(frame);
+    }
+
+    resize();
+    watchResize(canvas, resize);
+    frame();
+  }
+
+  /* ---------------- SIDEBAR 3D CORE (icosahedron) ---------------- */
+  function initCoreHolo() {
+    const canvas = document.getElementById('core-holo');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    // Icosahedron vertices from the golden ratio, normalized to the unit sphere.
+    const g = (1 + Math.sqrt(5)) / 2;
+    let verts = [
+      [-1, g, 0], [1, g, 0], [-1, -g, 0], [1, -g, 0],
+      [0, -1, g], [0, 1, g], [0, -1, -g], [0, 1, -g],
+      [g, 0, -1], [g, 0, 1], [-g, 0, -1], [-g, 0, 1],
+    ].map(([x, y, z]) => {
+      const m = Math.hypot(x, y, z);
+      return { x: x / m, y: y / m, z: z / m };
+    });
+    // Connect vertices that sit an edge-length apart (chord ≈ 1.05 on unit sphere).
+    const edges = [];
+    for (let i = 0; i < verts.length; i++) {
+      for (let j = i + 1; j < verts.length; j++) {
+        const d = Math.hypot(verts[i].x - verts[j].x, verts[i].y - verts[j].y, verts[i].z - verts[j].z);
+        if (d < 1.2) edges.push([i, j]);
+      }
+    }
+
+    let ry = 0;
+    function resize() {
+      canvas.width = canvas.clientWidth * devicePixelRatio;
+      canvas.height = canvas.clientHeight * devicePixelRatio;
+    }
+
+    function frame() {
+      const w = canvas.width, h = canvas.height;
+      if (w <= 4 || h <= 4) { requestAnimationFrame(frame); return; }
+      ctx.clearRect(0, 0, w, h);
+      const R = Math.min(w, h) * 0.34;
+      const rgb = accentRGB();
+      ry += 0.012;
+      const rx = ry * 0.4;
+      const proj = verts.map((v) => project3d(rotateXY(v, ry, rx), w, h, R, 3));
+      edges.forEach(([a, b]) => {
+        const zz = (proj[a].z + proj[b].z) / 2;
+        const front = 1 - (zz + 1) / 2;
+        ctx.strokeStyle = `rgba(${rgb}, ${0.15 + front * 0.5})`;
+        ctx.lineWidth = (0.5 + front * 0.8) * devicePixelRatio;
+        ctx.beginPath();
+        ctx.moveTo(proj[a].x, proj[a].y);
+        ctx.lineTo(proj[b].x, proj[b].y);
+        ctx.stroke();
+      });
+      requestAnimationFrame(frame);
+    }
+
+    resize();
+    watchResize(canvas, resize);
+    frame();
+  }
+
+  /* ---------------- MOUSE-PARALLAX 3D TILT ---------------- */
+  function initTilt() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (window.matchMedia('(hover: none)').matches) return;
+
+    function bind(selector, maxDeg, lift) {
+      document.querySelectorAll(selector).forEach((el) => {
+        el.addEventListener('mousemove', (e) => {
+          const r = el.getBoundingClientRect();
+          const px = (e.clientX - r.left) / r.width - 0.5;
+          const py = (e.clientY - r.top) / r.height - 0.5;
+          el.style.transition = 'transform .08s linear';
+          el.style.transform =
+            `perspective(900px) rotateY(${px * maxDeg}deg) rotateX(${-py * maxDeg}deg) translateZ(${lift}px)`;
+        });
+        el.addEventListener('mouseleave', () => {
+          el.style.transition = 'transform .4s cubic-bezier(.2,.8,.2,1)';
+          el.style.transform = '';
+        });
+      });
+    }
+    bind('.stat-card', 9, 14);
+    bind('.panel:not(.panel-holo)', 3.5, 6);
   }
 
   /* ---------------- MOBILE SIDEBAR (safety net if narrow) ---------------- */
@@ -714,6 +977,8 @@
     animateCounters();
     initCoreRing();
     initHudDrift();
+    initHologram();
+    initCoreHolo();
     initRadar();
     initTelemetry();
     initAllocation();
@@ -724,6 +989,7 @@
     initMatrix();
     initAlerts();
     initSettings();
+    initTilt();
     initResponsive();
   }
 

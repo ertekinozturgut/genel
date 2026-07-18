@@ -61,6 +61,7 @@
     <div class="sidebar-footer">
       <div class="core-status">
         <div class="core-ring">
+          <canvas id="core-holo"></canvas>
           <svg viewBox="0 0 100 100">
             <circle cx="50" cy="50" r="42" class="ring-bg"/>
             <circle cx="50" cy="50" r="42" class="ring-fg" id="core-ring-fg"/>
@@ -177,6 +178,25 @@
               <span class="stat-value" data-count="54" data-suffix="%">0%</span>
             </div>
             <div class="mini-bar"><div class="mini-bar-fill" style="width:54%"></div></div>
+          </div>
+        </div>
+
+        <div class="panel panel-holo panel-wide">
+          <div class="panel-head"><h2>Holografik Navigasyon Küresi</h2><span class="live-dot">PROJEKSİYON</span></div>
+          <div class="holo-stage" id="holo-stage">
+            <div class="holo-floor"></div>
+            <canvas id="holo-canvas"></canvas>
+            <div class="holo-scan"></div>
+            <div class="holo-corner tl"></div>
+            <div class="holo-corner tr"></div>
+            <div class="holo-corner bl"></div>
+            <div class="holo-corner br"></div>
+            <div class="holo-readout">
+              <div><span>YÖRÜNGE</span><b>GEO-SENK</b></div>
+              <div><span>EKSEN DÖNÜŞÜ</span><b id="holo-rot">0.0°</b></div>
+              <div><span>AKTİF UYDU</span><b>07</b></div>
+              <div><span>ENLEM KİLİDİ</span><b>STABİL</b></div>
+            </div>
           </div>
         </div>
 
