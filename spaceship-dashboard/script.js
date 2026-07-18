@@ -11,7 +11,7 @@
   let warpBoost = 0;
   function accentRGB() {
     return (getComputedStyle(document.documentElement)
-      .getPropertyValue('--accent-rgb').trim()) || '93,241,255';
+      .getPropertyValue('--accent-rgb').trim()) || '229,53,43';
   }
 
   /* ---------------- BOOT SEQUENCE ---------------- */
@@ -121,7 +121,7 @@
         ctx.lineTo(sx, sy);
         ctx.strokeStyle = warpBoost > 0.01
           ? `rgba(${accentRGB()}, ${alpha})`
-          : `rgba(175, 220, 255, ${alpha})`;
+          : `rgba(150, 152, 160, ${alpha * 0.7})`;
         ctx.lineWidth = size;
         ctx.stroke();
       }
@@ -265,7 +265,7 @@
       ctx.clearRect(0, 0, w, h);
 
       // rings
-      ctx.strokeStyle = 'rgba(93,241,255,0.18)';
+      ctx.strokeStyle = 'rgba(255,255,255,0.09)';
       ctx.lineWidth = 1;
       for (let i = 1; i <= 3; i++) {
         ctx.beginPath();
@@ -288,16 +288,16 @@
       ctx.moveTo(cx, cy);
       ctx.arc(cx, cy, radius, angle - 0.5, angle);
       ctx.closePath();
-      ctx.fillStyle = 'rgba(93,241,255,0.15)';
+      ctx.fillStyle = 'rgba(229,53,43,0.14)';
       ctx.fill();
       ctx.restore();
 
       ctx.beginPath();
       ctx.moveTo(cx, cy);
       ctx.lineTo(cx + Math.cos(angle) * radius, cy + Math.sin(angle) * radius);
-      ctx.strokeStyle = '#5df1ff';
+      ctx.strokeStyle = '#e5352b';
       ctx.lineWidth = 1.5;
-      ctx.shadowColor = '#5df1ff';
+      ctx.shadowColor = '#e5352b';
       ctx.shadowBlur = 8;
       ctx.stroke();
       ctx.shadowBlur = 0;
@@ -310,7 +310,10 @@
         if (diff < 0.5) b.hit = 1;
         b.hit *= 0.94;
         ctx.beginPath();
-        ctx.fillStyle = `rgba(255, 93, 224, ${0.4 + b.hit * 0.6})`;
+        // idle blips read white; a fresh sweep hit flares red
+        ctx.fillStyle = b.hit > 0.15
+          ? `rgba(229,53,43, ${0.5 + b.hit * 0.5})`
+          : `rgba(242,243,244, 0.5)`;
         ctx.arc(bx, by, 2.5 + b.hit * 2, 0, Math.PI * 2);
         ctx.fill();
       });
@@ -332,7 +335,7 @@
       shield: Array.from({ length: 40 }, () => 85 + Math.random() * 12),
       thermal: Array.from({ length: 40 }, () => 40 + Math.random() * 25),
     };
-    const colors = { power: '#5df1ff', shield: '#ff5de0', thermal: '#ffd25d' };
+    const colors = { power: '#e5352b', shield: '#f2f3f4', thermal: '#7d7f85' };
 
     function resize() {
       canvas.width = canvas.clientWidth * devicePixelRatio;
@@ -396,10 +399,10 @@
     const canvas = document.getElementById('alloc-canvas');
     const ctx = canvas.getContext('2d');
     const data = [
-      { label: 'İtki', value: 34, color: '#5df1ff' },
-      { label: 'Kalkanlar', value: 26, color: '#ff5de0' },
-      { label: 'Yaşam Destek', value: 22, color: '#ffd25d' },
-      { label: 'Sensörler', value: 18, color: '#7dff8a' },
+      { label: 'İtki', value: 34, color: '#e5352b' },
+      { label: 'Kalkanlar', value: 26, color: '#f2f3f4' },
+      { label: 'Yaşam Destek', value: 22, color: '#8a1f18' },
+      { label: 'Sensörler', value: 18, color: '#6d6f75' },
     ];
 
     function resize() {
@@ -431,16 +434,16 @@
       ctx.globalAlpha = 1;
       ctx.beginPath();
       ctx.arc(cx, cy, radius * 0.55, 0, Math.PI * 2);
-      ctx.fillStyle = '#0b1220';
+      ctx.fillStyle = '#131316';
       ctx.fill();
 
-      ctx.fillStyle = '#eaf6ff';
+      ctx.fillStyle = '#f2f3f4';
       ctx.textAlign = 'center';
-      ctx.font = `${14 * devicePixelRatio}px Orbitron`;
-      ctx.fillText('KAYNAK', cx, cy - 4 * devicePixelRatio);
-      ctx.font = `${10 * devicePixelRatio}px 'Share Tech Mono'`;
-      ctx.fillStyle = '#5c7185';
-      ctx.fillText('DAĞILIMI', cx, cy + 12 * devicePixelRatio);
+      ctx.font = `600 ${13 * devicePixelRatio}px 'Chakra Petch'`;
+      ctx.fillText('KAYNAK', cx, cy - 3 * devicePixelRatio);
+      ctx.font = `${9 * devicePixelRatio}px 'IBM Plex Mono'`;
+      ctx.fillStyle = '#63656b';
+      ctx.fillText('DAĞILIMI', cx, cy + 13 * devicePixelRatio);
     }
 
     watchResize(canvas, resize);
@@ -467,7 +470,7 @@
       const w = canvas.width, h = canvas.height;
       ctx.clearRect(0, 0, w, h);
 
-      ctx.strokeStyle = 'rgba(93,241,255,0.15)';
+      ctx.strokeStyle = 'rgba(255,255,255,0.06)';
       for (let i = 0; i < 10; i++) {
         ctx.beginPath();
         ctx.moveTo((w / 10) * i, 0);
@@ -480,7 +483,7 @@
         const x = p.x * w, y = p.y * h;
         i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
       });
-      ctx.strokeStyle = '#5df1ff';
+      ctx.strokeStyle = '#e5352b';
       ctx.lineWidth = 2 * devicePixelRatio;
       ctx.setLineDash([6 * devicePixelRatio, 6 * devicePixelRatio]);
       ctx.stroke();
@@ -490,11 +493,9 @@
         const x = p.x * w, y = p.y * h;
         ctx.beginPath();
         ctx.arc(x, y, 4 * devicePixelRatio, 0, Math.PI * 2);
-        ctx.fillStyle = i === points.length - 1 ? '#ff5de0' : '#5df1ff';
-        ctx.shadowColor = ctx.fillStyle;
-        ctx.shadowBlur = 8;
+        // reached waypoints render white; the final destination flags red
+        ctx.fillStyle = i === points.length - 1 ? '#e5352b' : '#f2f3f4';
         ctx.fill();
-        ctx.shadowBlur = 0;
       });
 
       // moving ship marker
@@ -506,8 +507,8 @@
       const sy = (points[i0].y + (points[i1].y - points[i0].y) * f) * h;
       ctx.beginPath();
       ctx.arc(sx, sy, 6 * devicePixelRatio, 0, Math.PI * 2);
-      ctx.fillStyle = '#ffd25d';
-      ctx.shadowColor = '#ffd25d';
+      ctx.fillStyle = '#e5352b';
+      ctx.shadowColor = '#e5352b';
       ctx.shadowBlur = 12;
       ctx.fill();
       ctx.shadowBlur = 0;
@@ -607,16 +608,18 @@
   }
 
   /* ---------------- GAUGES (SYSTEMS VIEW) ---------------- */
-  function makeGauge(label, value, color) {
+  // Full systems (>=90%) read neutral white; anything running below draws the
+  // eye in red so operators scan for the weakest link at a glance.
+  function makeGauge(label, value) {
     const circumference = 2 * Math.PI * 34;
     const offset = circumference - (circumference * value) / 100;
+    const color = value >= 90 ? '#e6e7e9' : '#e5352b';
     return `
       <div class="gauge">
         <svg viewBox="0 0 80 80">
-          <circle cx="40" cy="40" r="34" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="7"/>
-          <circle cx="40" cy="40" r="34" fill="none" stroke="${color}" stroke-width="7" stroke-linecap="round"
-            stroke-dasharray="${circumference}" stroke-dashoffset="${offset}"
-            style="filter:drop-shadow(0 0 4px ${color})"/>
+          <circle cx="40" cy="40" r="34" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="6"/>
+          <circle cx="40" cy="40" r="34" fill="none" stroke="${color}" stroke-width="6" stroke-linecap="butt"
+            stroke-dasharray="${circumference}" stroke-dashoffset="${offset}"/>
         </svg>
         <span class="gauge-val">${value}%</span>
         <span class="gauge-label">${label}</span>
@@ -625,17 +628,17 @@
 
   function initGauges() {
     document.getElementById('gauges-engine').innerHTML = [
-      makeGauge('İtki 1', 88, '#5df1ff'),
-      makeGauge('İtki 2', 91, '#5df1ff'),
-      makeGauge('Warp Bobini', 76, '#ff5de0'),
-      makeGauge('Manevra Jeti', 95, '#7dff8a'),
+      makeGauge('İtki 1', 88),
+      makeGauge('İtki 2', 91),
+      makeGauge('Warp Bobini', 76),
+      makeGauge('Manevra Jeti', 95),
     ].join('');
 
     document.getElementById('gauges-life').innerHTML = [
-      makeGauge('Oksijen', 87, '#ffd25d'),
-      makeGauge('Sıcaklık', 94, '#7dff8a'),
-      makeGauge('Nem', 68, '#5df1ff'),
-      makeGauge('Filtrasyon', 99, '#7dff8a'),
+      makeGauge('Oksijen', 87),
+      makeGauge('Sıcaklık', 94),
+      makeGauge('Nem', 68),
+      makeGauge('Filtrasyon', 99),
     ].join('');
   }
 
@@ -670,7 +673,7 @@
 
   function initAlerts() {
     document.getElementById('alert-list').innerHTML = alertsData.map(a => `
-      <li>⚠️<div><b>${a.title}</b><small>${a.detail} · ${a.time}</small></div></li>
+      <li><div><b>${a.title}</b><small>${a.detail} · ${a.time}</small></div></li>
     `).join('');
 
     const bell = document.getElementById('alert-bell');
@@ -699,16 +702,16 @@
   /* ---------------- SETTINGS ---------------- */
   function initSettings() {
     document.getElementById('toggle-scanlines').addEventListener('change', (e) => {
-      document.body.classList.toggle('no-scanlines', !e.target.checked);
+      document.body.classList.toggle('scan-on', e.target.checked);
     });
 
     document.querySelectorAll('.swatch').forEach((btn) => {
       btn.addEventListener('click', () => {
         const themes = {
-          cyan: '93,241,255',
-          magenta: '255,93,224',
-          green: '125,255,138',
-          amber: '255,210,93',
+          red: '229,53,43',
+          crimson: '179,18,27',
+          amber: '216,162,63',
+          steel: '138,148,166',
         };
         const theme = btn.dataset.theme;
         document.documentElement.style.setProperty('--accent-rgb', themes[theme]);
@@ -836,8 +839,8 @@
 
       const satAng = t * 1.2;
       const sat = project3d(rotateXY({ x: Math.cos(satAng) * 1.42, y: 0, z: Math.sin(satAng) * 1.42 }, ry * 0.6, rx + 0.5), w, h, R, focal);
-      ctx.fillStyle = `rgba(255,210,93,0.95)`;
-      ctx.shadowColor = 'rgba(255,210,93,0.9)';
+      ctx.fillStyle = `rgba(242,243,244,0.98)`;
+      ctx.shadowColor = 'rgba(242,243,244,0.85)';
       ctx.shadowBlur = 12 * devicePixelRatio;
       ctx.beginPath();
       ctx.arc(sat.x, sat.y, 4 * devicePixelRatio, 0, Math.PI * 2);
