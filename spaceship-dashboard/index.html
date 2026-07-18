@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEXUS-9 // Komuta Terminali</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<canvas id="starfield"></canvas>
+<div class="scanlines"></div>
+<div class="vignette"></div>
+
+<div id="boot-screen">
+  <div class="boot-log" id="boot-log"></div>
+  <div class="boot-bar-wrap">
+    <div class="boot-bar" id="boot-bar"></div>
+  </div>
+  <div class="boot-percent" id="boot-percent">0%</div>
+</div>
+
+<div class="app" id="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-emblem">
+        <svg viewBox="0 0 64 64" width="34" height="34">
+          <polygon points="32,4 58,52 32,42 6,52" fill="none" stroke="currentColor" stroke-width="2.5"/>
+          <circle cx="32" cy="30" r="4" fill="currentColor"/>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <span class="brand-name">NEXUS<span class="accent">-9</span></span>
+        <span class="brand-sub">KOMUTA SİSTEMİ</span>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <button class="nav-item active" data-view="overview">
+        <span class="nav-ico">◈</span><span>Genel Bakış</span>
+      </button>
+      <button class="nav-item" data-view="crew">
+        <span class="nav-ico">☰</span><span>Mürettebat</span>
+      </button>
+      <button class="nav-item" data-view="systems">
+        <span class="nav-ico">⚙</span><span>Sistemler</span>
+      </button>
+      <button class="nav-item" data-view="navigation">
+        <span class="nav-ico">✦</span><span>Navigasyon</span>
+      </button>
+      <button class="nav-item" data-view="logs">
+        <span class="nav-ico">≋</span><span>Kayıtlar</span>
+      </button>
+      <button class="nav-item" data-view="settings">
+        <span class="nav-ico">◎</span><span>Ayarlar</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="core-status">
+        <div class="core-ring">
+          <svg viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="42" class="ring-bg"/>
+            <circle cx="50" cy="50" r="42" class="ring-fg" id="core-ring-fg"/>
+          </svg>
+          <span class="core-ring-label" id="core-power-label">92%</span>
+        </div>
+        <div class="core-text">
+          <span>ÇEKİRDEK GÜCÜ</span>
+          <small>Stabil</small>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <h1 id="view-title">GENEL BAKIŞ</h1>
+        <span class="breadcrumb">NEXUS-9 / Köprü / <span id="view-crumb">Genel Bakış</span></span>
+      </div>
+
+      <div class="topbar-center">
+        <div class="hud-chip" data-tip="Kalkan Bütünlüğü">
+          <span class="dot dot-green"></span> KALKAN <b id="hud-shield">98%</b>
+        </div>
+        <div class="hud-chip" data-tip="Gövde Sağlığı">
+          <span class="dot dot-green"></span> GÖVDE <b id="hud-hull">100%</b>
+        </div>
+        <div class="hud-chip" data-tip="Yaşam Destek">
+          <span class="dot dot-amber"></span> O2 <b id="hud-oxygen">87%</b>
+        </div>
+        <div class="hud-chip" data-tip="İletişim Bağlantısı">
+          <span class="dot dot-green"></span> UPLINK <b id="hud-uplink">STABİL</b>
+        </div>
+      </div>
+
+      <div class="topbar-right">
+        <div class="stardate">
+          <span id="clock-time">00:00:00</span>
+          <small id="clock-date">YILDIZ TARİHİ --</small>
+        </div>
+        <button class="icon-btn" id="alert-bell" title="Uyarılar">
+          🔔<span class="badge" id="alert-count">3</span>
+        </button>
+        <div class="avatar" title="Komutan Ertekin">E</div>
+      </div>
+    </header>
+
+    <!-- ALERT DROPDOWN -->
+    <div class="alert-panel" id="alert-panel">
+      <div class="alert-panel-head">SİSTEM UYARILARI <button id="close-alerts">✕</button></div>
+      <ul id="alert-list"></ul>
+    </div>
+
+    <!-- VIEWS -->
+    <main class="views">
+
+      <!-- OVERVIEW -->
+      <section class="view active" id="view-overview">
+
+        <div class="stat-grid">
+          <div class="stat-card" data-glow="cyan">
+            <div class="stat-icon">⚡</div>
+            <div class="stat-info">
+              <span class="stat-label">Güç Çekirdeği</span>
+              <span class="stat-value" data-count="92" data-suffix="%">0%</span>
+            </div>
+            <div class="mini-bar"><div class="mini-bar-fill" style="width:92%"></div></div>
+          </div>
+
+          <div class="stat-card" data-glow="magenta">
+            <div class="stat-icon">🛡</div>
+            <div class="stat-info">
+              <span class="stat-label">Kalkan Bütünlüğü</span>
+              <span class="stat-value" data-count="98" data-suffix="%">0%</span>
+            </div>
+            <div class="mini-bar"><div class="mini-bar-fill" style="width:98%"></div></div>
+          </div>
+
+          <div class="stat-card" data-glow="amber">
+            <div class="stat-icon">🫧</div>
+            <div class="stat-info">
+              <span class="stat-label">Oksijen Seviyesi</span>
+              <span class="stat-value" data-count="87" data-suffix="%">0%</span>
+            </div>
+            <div class="mini-bar warn"><div class="mini-bar-fill" style="width:87%"></div></div>
+          </div>
+
+          <div class="stat-card" data-glow="green">
+            <div class="stat-icon">⛽</div>
+            <div class="stat-info">
+              <span class="stat-label">Yakıt Rezervi</span>
+              <span class="stat-value" data-count="64" data-suffix="%">0%</span>
+            </div>
+            <div class="mini-bar"><div class="mini-bar-fill" style="width:64%"></div></div>
+          </div>
+
+          <div class="stat-card" data-glow="cyan">
+            <div class="stat-icon">📡</div>
+            <div class="stat-info">
+              <span class="stat-label">Sinyal Gücü</span>
+              <span class="stat-value" data-count="76" data-suffix="%">0%</span>
+            </div>
+            <div class="mini-bar"><div class="mini-bar-fill" style="width:76%"></div></div>
+          </div>
+
+          <div class="stat-card" data-glow="magenta">
+            <div class="stat-icon">🚀</div>
+            <div class="stat-info">
+              <span class="stat-label">İtki Çıkışı</span>
+              <span class="stat-value" data-count="54" data-suffix="%">0%</span>
+            </div>
+            <div class="mini-bar"><div class="mini-bar-fill" style="width:54%"></div></div>
+          </div>
+        </div>
+
+        <div class="panel-grid">
+          <div class="panel panel-radar">
+            <div class="panel-head"><h2>Yakın Uzay Radarı</h2><span class="live-dot">CANLI</span></div>
+            <canvas id="radar-canvas"></canvas>
+          </div>
+
+          <div class="panel panel-chart">
+            <div class="panel-head"><h2>Telemetri Akışı</h2><span class="live-dot">CANLI</span></div>
+            <canvas id="telemetry-canvas"></canvas>
+            <div class="legend">
+              <span><i style="background:#5df1ff"></i> Güç</span>
+              <span><i style="background:#ff5de0"></i> Kalkan</span>
+              <span><i style="background:#ffd25d"></i> Termal</span>
+            </div>
+          </div>
+
+          <div class="panel panel-alloc">
+            <div class="panel-head"><h2>Kaynak Dağılımı</h2></div>
+            <canvas id="alloc-canvas"></canvas>
+          </div>
+
+          <div class="panel panel-terminal">
+            <div class="panel-head"><h2>Görev Kaydı Terminali</h2><span class="live-dot">İZLENİYOR</span></div>
+            <div class="terminal" id="terminal"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CREW -->
+      <section class="view" id="view-crew">
+        <div class="panel panel-wide">
+          <div class="panel-head">
+            <h2>Mürettebat Manifestosu</h2>
+            <input type="text" id="crew-search" placeholder="Mürettebat ara...">
+          </div>
+          <div class="table-wrap">
+            <table class="crew-table" id="crew-table">
+              <thead>
+                <tr>
+                  <th>Kimlik</th><th>Ad</th><th>Rol</th><th>Rütbe</th><th>Durum</th><th>Yetki</th>
+                </tr>
+              </thead>
+              <tbody id="crew-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- SYSTEMS -->
+      <section class="view" id="view-systems">
+        <div class="panel-grid systems-grid">
+          <div class="panel">
+            <div class="panel-head"><h2>Motor Dizisi</h2></div>
+            <div class="gauge-row" id="gauges-engine"></div>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><h2>Yaşam Destek Birimleri</h2></div>
+            <div class="gauge-row" id="gauges-life"></div>
+          </div>
+          <div class="panel panel-wide">
+            <div class="panel-head"><h2>Alt Sistem Matrisi</h2></div>
+            <div class="matrix-grid" id="matrix-grid"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- NAVIGATION -->
+      <section class="view" id="view-navigation">
+        <div class="panel-grid">
+          <div class="panel panel-wide">
+            <div class="panel-head"><h2>Rota İzleyici</h2><span class="live-dot">CANLI</span></div>
+            <canvas id="route-canvas"></canvas>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><h2>Rota Kaydı</h2></div>
+            <ul class="route-list" id="route-list"></ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- LOGS -->
+      <section class="view" id="view-logs">
+        <div class="panel panel-wide">
+          <div class="panel-head"><h2>Sistem Kayıt Arşivi</h2></div>
+          <div class="terminal terminal-tall" id="terminal-full"></div>
+        </div>
+      </section>
+
+      <!-- SETTINGS -->
+      <section class="view" id="view-settings">
+        <div class="panel-grid">
+          <div class="panel">
+            <div class="panel-head"><h2>Arayüz Tercihleri</h2></div>
+            <div class="settings-list">
+              <label class="toggle-row">
+                <span>Tarama Çizgisi Efekti</span>
+                <input type="checkbox" id="toggle-scanlines" checked>
+                <span class="toggle-ui"></span>
+              </label>
+              <label class="toggle-row">
+                <span>Yıldız Alanı Animasyonu</span>
+                <input type="checkbox" id="toggle-stars" checked>
+                <span class="toggle-ui"></span>
+              </label>
+              <label class="toggle-row">
+                <span>HUD Titreşim Efekti</span>
+                <input type="checkbox" id="toggle-flicker" checked>
+                <span class="toggle-ui"></span>
+              </label>
+              <div class="theme-row">
+                <span>Vurgu Rengi</span>
+                <div class="theme-swatches">
+                  <button class="swatch" style="--c:#5df1ff" data-theme="cyan"></button>
+                  <button class="swatch" style="--c:#ff5de0" data-theme="magenta"></button>
+                  <button class="swatch" style="--c:#7dff8a" data-theme="green"></button>
+                  <button class="swatch" style="--c:#ffd25d" data-theme="amber"></button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head"><h2>Acil Durum Kontrolleri</h2></div>
+            <div class="danger-zone">
+              <button class="warp-btn" id="warp-btn">
+                <span>WARP SÜRÜCÜSÜNÜ BAŞLAT</span>
+              </button>
+              <button class="ghost-btn" id="alarm-btn">GENEL ALARM TATBİKATI</button>
+              <button class="ghost-btn" id="reboot-btn">ÇEKİRDEĞİ YENİDEN BAŞLAT</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<div class="flash-overlay" id="flash-overlay"></div>
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
