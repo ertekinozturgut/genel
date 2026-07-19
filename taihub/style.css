@@ -561,6 +561,47 @@ body.reduce-motion .nav-progress.run::after{ animation:none; }
 .suggest .sg{ font-size:12.5px; padding:8px 14px; border:1px solid var(--border-strong); border-radius:100px; background:var(--surface-2); color:var(--text); }
 .suggest .sg:hover{ border-color:var(--accent); color:var(--accent); box-shadow:0 0 0 1px rgba(var(--accent-rgb),0.15); }
 
+/* operasyonel çözüm — belirgin geri dön + detay ikonu */
+.sol-back-btn{ margin-bottom:16px; gap:6px; }
+.sol-detail-ico{ width:46px; height:46px; border-radius:12px; background:var(--accent-weak); color:var(--accent); display:flex; align-items:center; justify-content:center; font-size:22px; flex:none; box-shadow:inset 0 0 14px rgba(var(--accent-rgb),0.2); }
+
+/* operasyonel çözüm sonucu (JSON yerine okunabilir çıktı) */
+.res-status{ margin-bottom:12px; }
+.res-block{ display:flex; flex-direction:column; gap:11px; }
+.res-head{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.res-title{ font-family:var(--font-display); font-size:11px; letter-spacing:.6px; text-transform:uppercase; color:var(--text-3); font-weight:600; }
+.kv-list,.wbs{ display:flex; flex-direction:column; border:1px solid var(--border); border-radius:10px; overflow:hidden; }
+.kv,.wbs-row{ display:flex; justify-content:space-between; gap:12px; padding:10px 13px; font-size:13px; border-bottom:1px solid var(--border); align-items:center; }
+.kv:last-child,.wbs-row:last-child{ border-bottom:none; }
+.kv span{ color:var(--text-2); } .kv b{ font-weight:600; }
+.res-note{ font-size:11.5px; color:var(--text-3); }
+.res-p{ font-size:13.5px; line-height:1.6; color:var(--text); }
+.res-p b{ color:var(--accent); }
+.res-meta{ display:flex; gap:8px; flex-wrap:wrap; }
+.cand{ display:flex; flex-direction:column; gap:6px; padding:12px; border:1px solid var(--border); border-radius:10px; background:var(--surface-2); }
+.cand-top{ display:flex; justify-content:space-between; align-items:center; }
+.cand-top b{ font-size:13.5px; }
+.score{ font-family:var(--font-display); font-weight:700; font-size:13px; padding:1px 10px; border-radius:100px; }
+.score.high{ color:var(--ok); background:var(--ok-weak); } .score.mid{ color:var(--warn); background:var(--warn-weak); } .score.low{ color:var(--accent); background:var(--accent-weak); }
+.cand-why{ font-size:12px; color:var(--text-2); }
+.res-actions{ list-style:none; display:flex; flex-direction:column; gap:9px; }
+.res-actions li{ display:flex; align-items:center; gap:9px; font-size:13px; }
+.res-actions .ck{ width:17px; height:17px; border-radius:5px; background:var(--ok-weak); border:1px solid var(--ok); flex:none; position:relative; }
+.res-actions .ck::after{ content:"✓"; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:10px; color:var(--ok); }
+.res-list{ margin:0; padding-left:18px; font-size:13px; color:var(--text); display:flex; flex-direction:column; gap:4px; }
+.res-quote{ font-size:14px; line-height:1.6; padding:14px; border-left:3px solid var(--accent); background:var(--surface-2); border-radius:0 8px 8px 0; }
+.res-example{ display:flex; flex-direction:column; gap:7px; padding:12px; border:1px solid var(--border); border-radius:10px; background:var(--surface-2); font-size:12.5px; }
+.res-example > div{ display:flex; gap:9px; align-items:baseline; }
+.ex-lbl{ font-size:10px; text-transform:uppercase; letter-spacing:.5px; color:var(--text-3); width:44px; flex:none; }
+.res-source{ display:flex; align-items:center; gap:7px; font-size:12px; color:var(--accent); font-weight:600; }
+
+/* vitrin detay modalı */
+.sc-story{ font-size:13.5px; line-height:1.65; color:var(--text-2); }
+.sc-metrics{ display:flex; gap:10px; flex-wrap:wrap; }
+.sc-metric{ flex:1; min-width:120px; border:1px solid var(--border); border-radius:10px; padding:12px 14px; background:var(--surface-2); }
+.sc-metric b{ display:block; font-family:var(--font-display); font-size:16px; }
+.sc-metric span{ font-size:11px; color:var(--text-3); }
+
 /* tanıtım turu */
 .tour{ position:fixed; inset:0; z-index:150; }
 .tour[hidden]{ display:none; }

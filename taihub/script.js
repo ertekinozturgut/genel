@@ -46,12 +46,12 @@
   ];
 
   const SHOWCASE = [
-    { title: 'Fatura Otomasyonu', cat: 'Çözüm', dept: 'Finans', status: 'Canlı', desc: 'Gelen faturaları otomatik okuyup ERP\'ye yazar. Aylık ~40 saat tasarruf.', metric: '%92 doğruluk' },
-    { title: 'İK Asistanı', cat: 'Ajan', dept: 'İnsan Kaynakları', status: 'Canlı', desc: 'Çalışan sorularının %70\'ini insan müdahalesi olmadan yanıtlar.', metric: '1.284 kullanım' },
-    { title: 'Toplantı Asistanı', cat: 'Proje', dept: 'Bilgi Teknolojileri', status: 'Pilot', desc: 'Teams kayıtlarından özet, karar ve aksiyon maddeleri çıkarır.', metric: 'Pilot: 3 ekip' },
-    { title: 'Tedarikçi Risk MCP', cat: 'MCP', dept: 'Satın Alma', status: 'Geliştirmede', desc: 'Tedarikçi finansal ve uyum verisini ajanlara açan MCP sunucusu.', metric: '5 tool' },
-    { title: 'CV Ön Eleme', cat: 'Çözüm', dept: 'İnsan Kaynakları', status: 'Canlı', desc: 'Başvuruları pozisyona göre skorlar, İK\'ya sıralı liste sunar.', metric: '%60 hızlanma' },
-    { title: 'Global Çeviri Hattı', cat: 'Proje', dept: 'Kurumsal İletişim', status: 'Fikir', desc: 'TR-EN-JP kurumsal yazışma çevirisi, terminoloji sözlüğü destekli.', metric: 'Değerlendirmede' },
+    { title: 'Fatura Otomasyonu', cat: 'Çözüm', dept: 'Finans', status: 'Canlı', desc: 'Gelen faturaları otomatik okuyup ERP\'ye yazar. Aylık ~40 saat tasarruf.', metric: '%92 doğruluk', link: 'solutions', owner: 'Finans Dijital Ekibi', story: 'Muhasebe ekibi her ay yüzlerce faturayı elle giriyordu. Dokümandan Veri Okuma çözümü faturaları otomatik okuyup ERP\'ye yazıyor; hata oranı düştü, ekip aylık ~40 saat kazandı.', metrics: [['%92', 'Doğruluk'], ['~40s', 'Aylık tasarruf'], ['3.2K', 'Aylık belge']] },
+    { title: 'İK Asistanı', cat: 'Ajan', dept: 'İnsan Kaynakları', status: 'Canlı', desc: 'Çalışan sorularının %70\'ini insan müdahalesi olmadan yanıtlar.', metric: '1.284 kullanım', link: 'agents', owner: 'İK Operasyon', story: 'İzin, bordro ve politika sorularının çoğu tekrar ediyordu. Copilot Studio ajanı bu soruların %70\'ini anında yanıtlıyor; İK ekibi karmaşık vakalara odaklanabiliyor.', metrics: [['%70', 'Otomatik yanıt'], ['1.284', 'Aylık kullanım'], ['<5sn', 'Yanıt süresi']] },
+    { title: 'Toplantı Asistanı', cat: 'Proje', dept: 'Bilgi Teknolojileri', status: 'Pilot', desc: 'Teams kayıtlarından özet, karar ve aksiyon maddeleri çıkarır.', metric: 'Pilot: 3 ekip', link: 'solutions', owner: 'BT İnovasyon', story: 'Toplantı sonrası not tutma zaman alıyordu. Sesten Metne çözümü Teams kaydından özet, karar ve aksiyon maddelerini çıkarıp ilgililere dağıtıyor. Şu an 3 ekipte pilot aşamada.', metrics: [['3', 'Pilot ekip'], ['%88', 'Özet doğruluğu'], ['~15dk', 'Kişi başı tasarruf']] },
+    { title: 'Tedarikçi Risk MCP', cat: 'MCP', dept: 'Satın Alma', status: 'Geliştirmede', desc: 'Tedarikçi finansal ve uyum verisini ajanlara açan MCP sunucusu.', metric: '5 tool', link: 'mcp', owner: 'Satın Alma & BT', story: 'Tedarikçi risk verisi farklı sistemlere dağılmıştı. Bu MCP sunucusu, verileri tek güvenli araç kutusunda ajanlara açıyor; satın alma ekibi tek soruyla risk skoruna ulaşıyor.', metrics: [['5', 'Tool'], ['Gizli', 'Veri sınıfı'], ['Geliştirmede', 'Durum']] },
+    { title: 'CV Ön Eleme', cat: 'Çözüm', dept: 'İnsan Kaynakları', status: 'Canlı', desc: 'Başvuruları pozisyona göre skorlar, İK\'ya sıralı liste sunar.', metric: '%60 hızlanma', link: 'solutions', owner: 'İşe Alım', story: 'Yoğun ilanlarda yüzlerce CV inceleniyordu. CV Analizi çözümü başvuruları pozisyon profiline göre skorlayıp gerekçeli sıralı liste sunuyor; ön eleme %60 hızlandı.', metrics: [['%60', 'Hızlanma'], ['12+', 'CV/dakika'], ['Gerekçeli', 'Skorlama']] },
+    { title: 'Global Çeviri Hattı', cat: 'Proje', dept: 'Kurumsal İletişim', status: 'Fikir', desc: 'TR-EN-JP kurumsal yazışma çevirisi, terminoloji sözlüğü destekli.', metric: 'Değerlendirmede', link: 'solutions', owner: 'Kurumsal İletişim', story: 'Global yazışmalarda terim tutarlılığı sorun oluyordu. Çeviri çözümü kurumsal terim sözlüğüyle TR-EN-JP çeviri yapacak. Şu an fikir aşamasında, değerlendiriliyor.', metrics: [['TR·EN·JP', 'Diller'], ['Sözlük', 'Terim desteği'], ['Fikir', 'Aşama']] },
   ];
 
   const LIBS = {
@@ -309,7 +309,27 @@
     return `<div class="acard"><div class="ac-top"><div class="ac-ico">${s.title[0]}</div><span class="chip ${STATUS_CLS[s.status]}"><span class="dt"></span>${s.status}</span></div>
       <div class="ac-body"><h4>${s.title}</h4><div class="ac-desc">${s.desc}</div>
       <div class="ac-meta"><span class="chip">${s.cat}</span><span>${s.dept}</span></div></div>
-      <div class="ac-foot"><b style="font-size:12.5px;color:var(--ok)">${s.metric}</b><button class="btn ghost sm">Detay ›</button></div></div>`;
+      <div class="ac-foot"><b style="font-size:12.5px;color:var(--ok)">${s.metric}</b><button class="btn ghost sm sc-detail" data-t="${s.title}">Detay ›</button></div></div>`;
+  }
+  const LINK_LABEL = { agents: 'Ajanı aç', solutions: 'Çözümü aç', mcp: 'MCP Hub\'da aç', chat: 'Sohbeti aç' };
+  function openShowcase(title) {
+    const s = SHOWCASE.find(x => x.title === title); if (!s) return;
+    const goLabel = LINK_LABEL[s.link] || 'İlgili modüle git';
+    openModal(`
+      <div class="modal-head"><h3>${s.title}</h3><button class="x">✕</button></div>
+      <div class="modal-body">
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><span class="chip ${STATUS_CLS[s.status]}"><span class="dt"></span>${s.status}</span><span class="chip">${s.cat}</span><span class="chip">${s.dept}</span></div>
+        <p class="sc-story">${s.story}</p>
+        <div class="sc-metrics">${(s.metrics || []).map(m => `<div class="sc-metric"><b>${m[0]}</b><span>${m[1]}</span></div>`).join('')}</div>
+        <div style="font-size:12px;color:var(--text-3)">Sahip: <b style="color:var(--text-2)">${s.owner || '—'}</b></div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn outline" id="sc-close">Kapat</button>
+        <button class="btn primary" id="sc-go" data-link="${s.link}">${goLabel} →</button>
+      </div>`);
+    $('#modal-inner .x').addEventListener('click', closeModal);
+    $('#sc-close').addEventListener('click', closeModal);
+    $('#sc-go').addEventListener('click', () => { closeModal(); goto(s.link); });
   }
   function renderShowcase() {
     const cats = ['Tümü', 'Ajan', 'Proje', 'Çözüm', 'MCP'];
@@ -318,6 +338,8 @@
     draw('Tümü');
     $('#showcase-filter').addEventListener('click', e => { const b = e.target.closest('.fchip'); if (!b) return; $$('#showcase-filter .fchip').forEach(x => x.classList.remove('active')); b.classList.add('active'); draw(b.dataset.cat); });
   }
+  // Vitrin "Detay" butonları — dashboard ve vitrin ızgarasının ikisinde de çalışır
+  document.addEventListener('click', e => { const b = e.target.closest('.sc-detail'); if (b) openShowcase(b.dataset.t); });
 
   /* ---------------- AGENTS ---------------- */
   function renderAgents() {
@@ -349,11 +371,11 @@
   /* ---------------- SOLUTIONS ---------------- */
   function renderSolutions() {
     $('#solutions-catalog').innerHTML = SOLUTIONS.map(s => `
-      <div class="acard sol-card" data-key="${s.key}"><div class="ac-top"><div class="ac-ico">${s.icon}</div><span class="engine-badge engine-${s.engine}">${s.engine === 'foundry' ? 'Foundry' : 'n8n'}</span></div>
+      <div class="acard sol-card" data-key="${s.key}"><div class="ac-top"><div class="ac-ico">${s.icon}</div></div>
       <div class="ac-body"><h4>${s.name}</h4><div class="ac-desc">${s.desc}</div></div>
       <div class="ac-foot"><span class="dim" style="font-size:11.5px">~${s.cost} kredi</span><button class="btn primary sm">Çalıştır ›</button></div></div>`).join('');
     $$('.sol-card').forEach(c => c.addEventListener('click', () => openSolution(c.dataset.key)));
-    $('#sol-back').addEventListener('click', () => { $('#solution-detail').style.display = 'none'; $('#solutions-catalog').style.display = 'grid'; });
+    $('#sol-back').addEventListener('click', () => { $('#solution-detail').style.display = 'none'; $('#solutions-catalog').style.display = 'grid'; $('#content').scrollTop = 0; });
     $('#sol-run').addEventListener('click', runSolution);
   }
   let currentSol = null;
@@ -361,8 +383,9 @@
     const s = SOLUTIONS.find(x => x.key === key); currentSol = s;
     $('#solutions-catalog').style.display = 'none';
     $('#solution-detail').style.display = 'block';
+    $('#content').scrollTop = 0;
+    $('#sol-detail-ico').textContent = s.icon;
     $('#sol-title').textContent = s.name; $('#sol-desc').textContent = s.desc;
-    $('#sol-engine').innerHTML = `<span class="engine-badge engine-${s.engine}">Motor: ${s.engine === 'foundry' ? 'Azure AI Foundry' : 'n8n'}</span>`;
     $('#sol-cost').textContent = s.cost + ' kredi';
     $('#sol-form').innerHTML = s.fields.map(f => {
       if (f.t === 'file') return `<div class="field" style="margin-bottom:12px"><label>${f.label}</label><div class="input" style="border-style:dashed;text-align:center;color:var(--text-3);cursor:pointer">⬆ Dosya seç veya sürükle</div></div>`;
@@ -370,25 +393,57 @@
       if (f.t === 'select') return `<div class="field" style="margin-bottom:12px"><label>${f.label}</label><select class="select">${f.opts.map(o => `<option>${o}</option>`).join('')}</select></div>`;
       return `<div class="field" style="margin-bottom:12px"><label>${f.label}</label><input class="input" placeholder="${f.ph || ''}"></div>`;
     }).join('');
-    $('#sol-result').innerHTML = `<div class="run-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>Formu doldurup <b>Çalıştır</b>'a bas.</div>`;
+    $('#sol-result').innerHTML = `<div class="run-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>Formu doldurup <b>Çalıştır</b>'a bas — sonuç burada görünür.</div>`;
     $('#sol-export').style.display = 'none';
   }
-  const SOL_RESULTS = {
-    doc: '{\n  "faturaNo": "TR-2026-004821",\n  "tarih": "2026-07-12",\n  "tedarikci": "Delta Otomotiv A.Ş.",\n  "tutar": 148500.00,\n  "kdv": 29700.00,\n  "paraBirimi": "TRY",\n  "guven": 0.96\n}',
-    cv: '[\n  { "aday": "A. Yılmaz", "skor": 92, "gerekce": "5 yıl ilgili deneyim, aranan 3 yetkinliğin tamamı" },\n  { "aday": "M. Demir", "skor": 78, "gerekce": "Deneyim uygun, sertifika eksik" },\n  { "aday": "S. Kaya", "skor": 61, "gerekce": "Pozisyon profiliyle kısmi örtüşme" }\n]',
-    stt: '{\n  "sure": "12:44",\n  "konusmaci": 3,\n  "ozet": "Q3 lansman takvimi ve tedarik riskleri görüşüldü.",\n  "aksiyonlar": [\n    "Tedarik ekibi alternatif tedarikçi listesi hazırlayacak (Ali)",\n    "Pazarlama lansman tarihini 2 hafta öne çekmeyi değerlendirecek"\n  ]\n}',
-    ocr: '{\n  "belgeTipi": "Fatura",\n  "alanlar": { "toplam": 4820.50, "kdv": 964.10, "tarih": "2026-06-30" },\n  "tablolar": 1,\n  "guven": 0.91\n}',
-    plan: '{\n  "wbs": ["Analiz (2 hf)", "Tasarım (3 hf)", "Geliştirme (6 hf)", "Test (2 hf)"],\n  "riskler": ["Kapsam genişlemesi", "Kaynak müsaitliği"],\n  "kilometreTaslari": ["MVP: 8. hafta", "Canlı: 13. hafta"]\n}',
-    translate: '{\n  "kaynak": "TR",\n  "hedef": "EN",\n  "ceviri": "The Q3 launch schedule has been reviewed and approved by the steering committee.",\n  "terimSozlugu": ["lansman → launch"]\n}',
-    anon: '{\n  "maskelenen": { "tcKimlik": 2, "iban": 1, "isim": 3 },\n  "ciktiHazir": true,\n  "not": "Maskelenmiş belge AI\'a güvenle girilebilir."\n}',
-    rag: '{\n  "cevap": "Yıllık izin, bir sonraki yıla en fazla 5 gün devredilebilir; fazlası hak kaybıdır.",\n  "kaynak": "İK Prosedürü PR-14, Madde 6.3",\n  "guven": 0.94\n}',
-  };
+
+  // her çözüm için işleme metni ve ihtiyaca uygun (JSON değil) çıktı
+  const SOL_RUN_TEXT = { doc: 'Belge okunuyor…', cv: 'CV\'ler değerlendiriliyor…', stt: 'Ses yazıya çevriliyor…', ocr: 'Görsel okunuyor…', plan: 'Plan oluşturuluyor…', translate: 'Çevriliyor…', anon: 'Kişisel veriler maskeleniyor…', rag: 'Yanıt hazırlanıyor…' };
+  function kv(rows) { return `<div class="kv-list">${rows.map(r => `<div class="kv"><span>${r[0]}</span><b>${r[1]}</b></div>`).join('')}</div>`; }
+  function solResultHTML(key, v) {
+    switch (key) {
+      case 'doc': return `<div class="res-block"><div class="res-head"><span class="res-title">Çıkarılan alanlar</span><span class="chip ok"><span class="dt"></span>%96 güven</span></div>
+        ${kv([['Fatura No', 'TR-2026-004821'], ['Tarih', '12.07.2026'], ['Tedarikçi', 'Delta Otomotiv A.Ş.'], ['Tutar', '148.500,00 ₺'], ['KDV (%20)', '29.700,00 ₺'], ['Genel Toplam', '178.200,00 ₺']])}
+        <div class="res-note">Alanlar belge şablonuna göre eşlendi. Onaylayıp hedef sisteme aktarabilirsin.</div></div>`;
+      case 'cv': {
+        const cands = [['A. Yılmaz', 92, '5 yıl ilgili deneyim; aranan 3 yetkinliğin tamamı mevcut.', 'high'], ['M. Demir', 78, 'Deneyim uygun, ancak istenen sertifika eksik.', 'mid'], ['S. Kaya', 61, 'Pozisyon profiliyle kısmen örtüşüyor.', 'low']];
+        return `<div class="res-block"><div class="res-title">Eşleşme sıralaması · 12 aday değerlendirildi</div>
+          ${cands.map((c, i) => `<div class="cand"><div class="cand-top"><b>${i + 1}. ${c[0]}</b><span class="score ${c[3]}">${c[1]}</span></div><div class="bar ${c[3] === 'high' ? 'ok' : c[3] === 'mid' ? 'warn' : ''}"><i style="width:${c[1]}%"></i></div><span class="cand-why">${c[2]}</span></div>`).join('')}
+          <div class="res-note">Tam liste İK'ya Excel olarak indirilebilir.</div></div>`;
+      }
+      case 'stt': return `<div class="res-block"><div class="res-meta"><span class="chip">Süre 12:44</span><span class="chip">3 konuşmacı</span></div>
+        <div class="res-title">Özet</div><p class="res-p">Q3 lansman takvimi ve tedarik riskleri görüşüldü. Ekip, olası tedarik gecikmesine karşı alternatif planı devreye almayı kararlaştırdı.</p>
+        <div class="res-title">Aksiyon maddeleri</div><ul class="res-actions">
+          <li><span class="ck"></span>Alternatif tedarikçi listesi hazırlanacak — <b>Ali</b></li>
+          <li><span class="ck"></span>Lansman tarihini 2 hafta öne çekme değerlendirilecek — <b>Pazarlama</b></li>
+          <li><span class="ck"></span>Risk özeti yönetim toplantısına eklenecek — <b>PMO</b></li></ul>
+        <div class="res-note">${v[1] && v[1].includes('Toplantı') ? 'Toplantı notu şablonuna yazıldı.' : 'Transkriptin tamamı indirilebilir.'}</div></div>`;
+      case 'ocr': return `<div class="res-block"><div class="res-head"><span class="res-title">${v[1] || 'Fatura'} · okunan alanlar</span><span class="chip ok"><span class="dt"></span>%91 güven</span></div>
+        ${kv([['Toplam', '4.820,50 ₺'], ['KDV', '964,10 ₺'], ['Tarih', '30.06.2026']])}
+        <div class="res-note">1 tablo bulundu ve alanlar otomatik eşlendi.</div></div>`;
+      case 'plan': return `<div class="res-block"><div class="res-title">İş kırılım yapısı (WBS)</div>
+        <div class="wbs">${[['Analiz', '2 hafta'], ['Tasarım', '3 hafta'], ['Geliştirme', '6 hafta'], ['Test & Devreye alma', '2 hafta']].map(w => `<div class="wbs-row"><span>${w[0]}</span><span class="chip">${w[1]}</span></div>`).join('')}</div>
+        <div class="res-title">Kilometre taşları</div><ul class="res-list"><li>MVP — 8. hafta</li><li>Canlı — 13. hafta</li></ul>
+        <div class="res-title">Riskler</div><div class="tag-row"><span class="chip warn">Kapsam genişlemesi</span><span class="chip warn">Kaynak müsaitliği</span></div></div>`;
+      case 'translate': { const hedef = v[1] || 'İngilizce'; const ceviri = hedef === 'Japonca' ? '第3四半期のローンチスケジュールは運営委員会によって承認されました。' : hedef === 'Türkçe' ? 'Q3 lansman takvimi yönlendirme komitesi tarafından onaylandı.' : 'The Q3 launch schedule has been reviewed and approved by the steering committee.';
+        return `<div class="res-block"><div class="res-meta"><span class="chip">TR → ${hedef}</span></div><div class="res-quote">${ceviri}</div><div class="res-note">Kurumsal terim sözlüğü uygulandı: "lansman → launch".</div></div>`; }
+      case 'anon': return `<div class="res-block"><div class="res-title">Maskeleme tamamlandı</div>
+        <div class="tag-row"><span class="chip red">2 TC kimlik</span><span class="chip red">1 IBAN</span><span class="chip red">3 isim</span></div>
+        <div class="res-example"><div><span class="ex-lbl">Önce</span><span class="mono">Ahmet Yılmaz · TR33 0006 1005 …</span></div><div><span class="ex-lbl">Sonra</span><span class="mono">[İSİM] · [IBAN]</span></div></div>
+        <div class="res-note">Maskelenmiş belge indirilebilir ve yapay zekaya güvenle girilebilir.</div></div>`;
+      case 'rag': return `<div class="res-block"><div class="res-title">Yanıt</div>
+        <p class="res-p">Yıllık izin, bir sonraki yıla en fazla <b>5 gün</b> devredilebilir; bu süreyi aşan izinler hak kaybına uğrar. Devir işlemi İK onayı ile yapılır.</p>
+        <div class="res-source"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>Kaynak: ${v[0] || 'İK Prosedürleri'} · Madde 6.3</div></div>`;
+    }
+    return '';
+  }
   function runSolution() {
     if (!currentSol) return;
     const box = $('#sol-result');
-    box.innerHTML = `<div class="run-empty"><div class="typing"><i></i><i></i><i></i></div>${currentSol.engine === 'foundry' ? 'Azure AI Foundry' : 'n8n akışı'} çalışıyor…</div>`;
+    const vals = $$('#sol-form select, #sol-form input, #sol-form textarea').map(x => x.value);
+    box.innerHTML = `<div class="run-empty"><div class="typing"><i></i><i></i><i></i></div>${SOL_RUN_TEXT[currentSol.key] || 'İşleniyor…'}</div>`;
     setTimeout(() => {
-      box.innerHTML = `<div style="margin-bottom:10px" class="chip ok"><span class="dt"></span>Tamamlandı · ${currentSol.cost} kredi harcandı</div><pre class="result-json">${SOL_RESULTS[currentSol.key]}</pre><button class="btn outline sm" style="margin-top:12px" data-goto="chat">↗ Sohbete aktar</button>`;
+      box.innerHTML = `<div class="res-status chip ok"><span class="dt"></span>Tamamlandı · ${currentSol.cost} kredi harcandı</div>${solResultHTML(currentSol.key, vals)}<button class="btn outline sm" style="margin-top:14px" data-goto="chat">↗ Sohbete aktar</button>`;
       $('#sol-export').style.display = 'inline-flex';
       toast('Çözüm tamamlandı', currentSol.name + ' sonucu hazır.', 'ok');
     }, 1500);
@@ -486,7 +541,7 @@
     ].map(s => `<div class="card stat"><div class="s-label"><span class="s-ico">${s.ic}</span>${s.l}</div><div class="s-val tnum">${s.v} <span style="font-size:14px;color:var(--text-3)">${s.s}</span></div></div>`).join('');
     $('#credit-ledger').innerHTML = `<thead><tr><th>Zaman</th><th>Tür</th><th>Kaynak</th><th>Model / Çözüm</th><th style="text-align:right">Kredi</th></tr></thead><tbody>${[
       ['14:32', 'Kullanım', 'Sohbet', 'GPT-4o', -48],
-      ['14:05', 'Kullanım', 'Operasyonel AI', 'CV Analizi (n8n)', -120],
+      ['14:05', 'Kullanım', 'Operasyonel AI', 'CV Analizi', -120],
       ['13:20', 'Kullanım', 'Sohbet', 'Claude Sonnet 4.5', -85],
       ['11:48', 'Kullanım', 'MCP', 'sharepoint-docs', -12],
       ['09:15', 'Bonus', 'Ek kredi', 'Süper Admin onayı', +1000],
@@ -502,23 +557,49 @@
     $('#history-filter').innerHTML = filters.map((f, i) => `<button class="fchip ${i === 0 ? 'active' : ''}">${f}</button>`).join('');
     const rows = [
       ['Bugün 14:32', 'Sohbet', 'Q3 lansman planı taslağı', 'GPT-4o', 48],
-      ['Bugün 14:05', 'Operasyonel AI', 'CV Analizi — 12 aday', 'n8n', 120],
-      ['Bugün 11:48', 'MCP', 'sharepoint-docs · searchDocs', 'Gateway', 12],
-      ['Dün 16:20', 'Ajan', 'İK Asistanı — izin sorgusu', 'Copilot', 15],
+      ['Bugün 14:05', 'Operasyonel AI', 'CV Analizi — 12 aday', 'CV Analizi', 120],
+      ['Bugün 11:48', 'MCP', 'sharepoint-docs · searchDocs', 'MCP', 12],
+      ['Dün 16:20', 'Ajan', 'İK Asistanı — izin sorgusu', 'İK Asistanı', 15],
       ['Dün 10:03', 'Sohbet', 'Sözleşme risk taraması', 'Claude Sonnet 4.5', 85],
-      ['23 Tem', 'Operasyonel AI', 'Dokümandan veri okuma', 'Foundry', 8],
+      ['23 Tem', 'Operasyonel AI', 'Dokümandan veri okuma', 'Dokümandan Veri Okuma', 8],
     ];
-    $('#history-tbl').innerHTML = `<thead><tr><th>Zaman</th><th>Tür</th><th>Başlık</th><th>Model/Motor</th><th style="text-align:right">Kredi</th><th></th></tr></thead><tbody>${rows.map(r => `<tr><td class="dim">${r[0]}</td><td><span class="chip">${r[1]}</span></td><td class="cell-strong">${r[2]}</td><td>${r[3]}</td><td style="text-align:right" class="tnum muted">${r[4]}</td><td style="text-align:right"><button class="btn ghost sm">Aç</button></td></tr>`).join('')}</tbody>`;
+    $('#history-tbl').innerHTML = `<thead><tr><th>Zaman</th><th>Tür</th><th>Başlık</th><th>Kaynak</th><th style="text-align:right">Kredi</th><th></th></tr></thead><tbody>${rows.map(r => `<tr><td class="dim">${r[0]}</td><td><span class="chip">${r[1]}</span></td><td class="cell-strong">${r[2]}</td><td>${r[3]}</td><td style="text-align:right" class="tnum muted">${r[4]}</td><td style="text-align:right"><button class="btn ghost sm">Aç</button></td></tr>`).join('')}</tbody>`;
     $('#history-filter').addEventListener('click', e => { const b = e.target.closest('.fchip'); if (!b) return; $$('#history-filter .fchip').forEach(x => x.classList.remove('active')); b.classList.add('active'); });
   }
 
-  /* ---------------- ADMIN ---------------- */
+  /* ---------------- ADMIN (çalışır durum yönetimli) ---------------- */
   const ADMIN_TABS = ['Genel Bakış', 'Kullanıcılar', 'Kredi', 'Modeller', 'Çözümler', 'MCP', 'Guardrail', 'Loglar', 'Dış API'];
+  const ROLE_LABEL = { super: 'Süper Admin', admin: 'Admin', dept: 'Departman Yöneticisi', editor: 'İçerik Editörü', user: 'Kullanıcı' };
+  const ROLE_CLS = { super: 'super', admin: 'admin', dept: '', editor: '', user: '' };
+  let creditReqs = [
+    { name: 'Ayşe Demir', dept: 'İK', credit: '1.000', reason: 'Toplu CV analizi' },
+    { name: 'Can Yıldız', dept: 'Finans', credit: '2.000', reason: 'Çeyrek sonu raporlama' },
+    { name: 'Deniz Ak', dept: 'Kalite', credit: '500', reason: 'Doküman özetleme' },
+  ];
+  const modelPub = {}; MODELS.forEach(m => modelPub[m.id] = true);
+  let guardrails = [
+    { name: 'PII Maskeleme (TC, IBAN)', mode: 'enforced', scope: 'Tüm modeller' },
+    { name: 'Yasaklı konu filtresi', mode: 'enforced', scope: 'Chat + Çözümler' },
+    { name: 'Marka/hukuk uyarısı', mode: 'önce logla', scope: 'Çıktı katmanı' },
+  ];
+  let apiClients = [
+    { name: 'sap-entegrasyon', owner: 'BT / Entegrasyon', scope: 'chat:invoke, mcp:proxy', quota: '5K istek/gün' },
+    { name: 'ik-portal', owner: 'İK Dijital', scope: 'solutions:cv-analysis', quota: '1K istek/gün' },
+  ];
+  let adminUsers = [
+    { name: 'Ertekin Öztürgüt', type: 'SSO', dept: 'Mühendislik', role: 'super' },
+    { name: 'Ayşe Demir', type: 'SSO', dept: 'İnsan Kaynakları', role: 'admin' },
+    { name: 'danisman@partner.com', type: 'Statik', dept: '—', role: 'user' },
+    { name: 'Mehmet Kaya', type: 'SSO', dept: 'Kalite', role: 'editor' },
+  ];
   function renderAdmin() {
     $('#admin-sub').innerHTML = ADMIN_TABS.map((t, i) => `<button class="admin-tab ${i === 0 ? 'active' : ''}" data-i="${i}">${t}</button>`).join('');
     $('#admin-panes').innerHTML = ADMIN_TABS.map((t, i) => `<div class="admin-pane ${i === 0 ? 'active' : ''}" id="ap-${i}">${adminPane(i)}</div>`).join('');
     $('#admin-sub').addEventListener('click', e => { const b = e.target.closest('.admin-tab'); if (!b) return; $$('.admin-tab').forEach(x => x.classList.remove('active')); b.classList.add('active'); $$('.admin-pane').forEach((p, i) => p.classList.toggle('active', i == b.dataset.i)); if (b.dataset.i == 0) drawAdminCharts(); });
+    initAdminActions(); updateAdminBadge();
   }
+  function refreshPane(i) { const p = $('#ap-' + i); if (p) { p.innerHTML = adminPane(i); if (i === 0) drawAdminCharts(); } }
+  function updateAdminBadge() { const b = $('.nav-item[data-view="admin"] .nav-badge'); if (b) { b.textContent = creditReqs.length; b.style.display = creditReqs.length ? '' : 'none'; } }
   function tbl(head, rows) { return `<div class="panel"><div class="tbl-wrap"><table class="tbl"><thead><tr>${head.map(h => `<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.map(r => `<tr>${r.map(c => `<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div></div>`; }
   function adminPane(i) {
     switch (i) {
@@ -533,33 +614,99 @@
           <div class="panel"><div class="panel-head"><h3>İstek hacmi (7 gün)</h3></div><canvas id="admin-line" width="700" height="220"></canvas></div>
           <div class="panel"><div class="panel-head"><h3>Model dağılımı</h3></div><div style="display:flex;align-items:center;gap:18px"><canvas id="admin-donut" width="180" height="220" style="max-width:180px"></canvas><div id="admin-donut-legend" style="flex:1"></div></div></div>
         </div>`;
-      case 1: return tbl(['Kullanıcı', 'Tür', 'Departman', 'Rol', 'Son giriş'], [
-        ['Ertekin Öztürgüt', '<span class="chip info">SSO</span>', 'Mühendislik', '<span class="role-pill super">Süper Admin</span>', 'Şimdi'],
-        ['Ayşe Demir', '<span class="chip info">SSO</span>', 'İnsan Kaynakları', '<span class="role-pill admin">Admin</span>', '2 saat önce'],
-        ['danisman@partner.com', '<span class="chip">Statik</span>', '—', '<span class="role-pill">Kullanıcı</span>', 'Dün'],
-        ['Mehmet Kaya', '<span class="chip info">SSO</span>', 'Kalite', '<span class="role-pill">İçerik Editörü</span>', '3 gün önce'],
-      ]);
-      case 2: return `<div class="grid g-3">${[['Rol/Departman varsayılanları', '6 politika tanımlı'], ['Bekleyen ek kredi talepleri', '<b style="color:var(--accent)">3 talep</b> onay bekliyor'], ['Tüketim anomali uyarısı', '1 kullanıcıda ani artış']].map(c => `<div class="panel"><h3 style="font-size:14px">${c[0]}</h3><p class="muted" style="margin-top:6px;font-size:13px">${c[1]}</p></div>`).join('')}</div>
-        <div style="margin-top:16px">${tbl(['Talep eden', 'Departman', 'Kredi', 'Gerekçe', 'İşlem'], [
-          ['Ayşe Demir', 'İK', '1.000', 'Toplu CV analizi', '<button class="btn primary sm">Onayla</button> <button class="btn ghost sm">Reddet</button>'],
-          ['Can Yıldız', 'Finans', '2.000', 'Çeyrek sonu raporlama', '<button class="btn primary sm">Onayla</button> <button class="btn ghost sm">Reddet</button>'],
-        ])}</div>`;
-      case 3: return tbl(['Model', 'Sağlayıcı', 'Kredi katsayısı', 'Yetenekler', 'Durum'], MODELS.map(m => [`<b>${m.name}</b>`, 'Azure AI Foundry', m.cost, m.caps.map(c => `<span class="cap-badge">${c}</span>`).join(' '), '<span class="chip ok"><span class="dt"></span>Yayında</span>']));
-      case 4: return tbl(['Çözüm', 'Motor (ExecutionTarget)', 'Kredi', 'Yetki grubu', 'Durum'], SOLUTIONS.map(s => [`<b>${s.name}</b>`, `<span class="engine-badge engine-${s.engine}">${s.engine === 'foundry' ? 'Foundry' : 'n8n'}</span>`, s.cost, 'Tüm çalışanlar', '<span class="chip ok"><span class="dt"></span>Aktif']));
+      case 1: {
+        const rows = adminUsers.map((u, idx) => `<tr><td class="cell-strong">${u.name}</td><td>${u.type === 'SSO' ? '<span class="chip info">SSO</span>' : '<span class="chip">Statik</span>'}</td><td>${u.dept}</td><td><span class="role-pill ${ROLE_CLS[u.role]}">${ROLE_LABEL[u.role]}</span></td><td style="text-align:right"><button class="btn outline sm" data-act="user-role" data-i="${idx}">Rol değiştir</button></td></tr>`).join('');
+        return `<div class="panel"><div class="panel-head"><h3>Kullanıcılar ve roller</h3><button class="btn outline sm" data-act="user-add">+ Statik kullanıcı</button></div><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Kullanıcı</th><th>Tür</th><th>Departman</th><th>Rol</th><th></th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
+      }
+      case 2: {
+        const cards = [['Rol/Departman varsayılanları', '6 politika tanımlı'], ['Bekleyen ek kredi talepleri', `<b style="color:var(--accent)">${creditReqs.length} talep</b> onay bekliyor`], ['Tüketim anomali uyarısı', '1 kullanıcıda ani artış']];
+        const rows = creditReqs.length ? creditReqs.map((r, idx) => `<tr><td class="cell-strong">${r.name}</td><td>${r.dept}</td><td class="tnum">${r.credit}</td><td class="muted">${r.reason}</td><td style="text-align:right;white-space:nowrap"><button class="btn primary sm" data-act="credit-approve" data-i="${idx}">Onayla</button> <button class="btn ghost sm" data-act="credit-reject" data-i="${idx}">Reddet</button></td></tr>`).join('') : '<tr><td colspan="5" style="text-align:center;color:var(--text-3);padding:22px">Bekleyen talep yok 🎉</td></tr>';
+        return `<div class="grid g-3">${cards.map(c => `<div class="panel"><h3 style="font-size:14px">${c[0]}</h3><p class="muted" style="margin-top:6px;font-size:13px">${c[1]}</p></div>`).join('')}</div>
+          <div class="panel" style="margin-top:16px"><div class="panel-head"><h3>Bekleyen talepler</h3></div><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Talep eden</th><th>Departman</th><th>Kredi</th><th>Gerekçe</th><th></th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
+      }
+      case 3: {
+        const rows = MODELS.map(m => { const pub = modelPub[m.id]; return `<tr><td><b>${m.name}</b></td><td>${m.cost}</td><td>${m.caps.map(c => `<span class="cap-badge">${c}</span>`).join(' ')}</td><td>${pub ? '<span class="chip ok"><span class="dt"></span>Yayında</span>' : '<span class="chip">Pasif</span>'}</td><td style="text-align:right"><button class="btn ${pub ? 'ghost' : 'primary'} sm" data-act="model-toggle" data-id="${m.id}">${pub ? 'Yayından kaldır' : 'Yayınla'}</button></td></tr>`; }).join('');
+        return `<div class="panel"><div class="panel-head"><h3>Model yönetimi</h3></div><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Model</th><th>Kredi katsayısı</th><th>Yetenekler</th><th>Durum</th><th></th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
+      }
+      case 4: return tbl(['Çözüm', 'Kredi katsayısı', 'Yetki grubu', 'Durum'], SOLUTIONS.map(s => [`<b>${s.name}</b>`, s.cost + ' kredi', 'Tüm çalışanlar', '<span class="chip ok"><span class="dt"></span>Aktif</span>']));
       case 5: return tbl(['MCP Sunucusu', 'Versiyon', 'Sağlık', 'Sınıf', 'Aktif key', 'Çağrı (24s)'], MCPS.map(m => [`<b class="mono">${m.name}</b>`, m.ver, `<span class="chip ${m.health === 'ok' ? 'ok' : 'warn'}"><span class="dt"></span>${HEALTH[m.health][1]}</span>`, m.cls, Math.floor(Math.random() * 40 + 5), (Math.floor(Math.random() * 900 + 100)).toLocaleString('tr')]));
-      case 6: return `<div class="panel"><div class="panel-head"><h3>Guardrail politikaları</h3><button class="btn outline sm">+ Politika ekle</button></div>${[['PII Maskeleme (TC, IBAN)', 'enforced', 'Tüm modeller'], ['Yasaklı konu filtresi', 'enforced', 'Chat + Çözümler'], ['Marka/hukuk uyarısı', 'önce logla', 'Çıktı katmanı']].map(g => `<div class="lesson"><div style="flex:1"><b style="font-size:13.5px">${g[0]}</b><div class="l-type">${g[2]}</div></div><span class="chip ${g[1] === 'enforced' ? 'red' : 'warn'}">${g[1]}</span></div>`).join('')}</div>`;
+      case 6: return `<div class="panel"><div class="panel-head"><h3>Guardrail politikaları</h3><button class="btn outline sm" data-act="gr-add">+ Politika ekle</button></div>${guardrails.map((g, idx) => `<div class="lesson"><div style="flex:1"><b style="font-size:13.5px">${g.name}</b><div class="l-type">${g.scope}</div></div><span class="chip ${g.mode === 'enforced' ? 'red' : 'warn'}">${g.mode}</span><button class="btn ghost sm" data-act="gr-del" data-i="${idx}" style="color:var(--accent)">Kaldır</button></div>`).join('')}</div>`;
       case 7: return `<div style="margin-bottom:12px" class="login-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>Loglar iki depoda tutulur: kullanıcıya dönük operasyonel depo ve değişmez (append-only) denetim deposu. Her erişim ayrıca loglanır.</div>${tbl(['Zaman', 'Aktör', 'Eylem', 'Hedef', 'IP'], [
         ['14:32:07', 'Ertekin Ö.', 'chat.invoke', 'GPT-4o', '10.4.2.11'],
         ['14:30:55', 'Ayşe D.', 'credit.approve', 'Can Yıldız +2000', '10.4.3.8'],
         ['14:28:12', 'sistem', 'guardrail.block', 'PII tespiti · maskelendi', '—'],
         ['14:20:41', 'danisman@…', 'mcp.proxy', 'sharepoint-docs.searchDocs', '188.2.x.x'],
       ])}`;
-      case 8: return `<div class="panel"><div class="panel-head"><h3>Dış API istemcileri</h3><button class="btn primary sm">+ İstemci oluştur</button></div>${tbl(['İstemci', 'Sahip', 'Scope', 'Kota', 'Durum'], [
-        ['sap-entegrasyon', 'BT / Entegrasyon', '<span class="mono" style="font-size:11px">chat:invoke, mcp:proxy</span>', '5K istek/gün', '<span class="chip ok"><span class="dt"></span>Aktif</span>'],
-        ['ik-portal', 'İK Dijital', '<span class="mono" style="font-size:11px">solutions:cv-analysis</span>', '1K istek/gün', '<span class="chip ok"><span class="dt"></span>Aktif</span>'],
-      ])}</div>`;
+      case 8: {
+        const rows = apiClients.map((c, idx) => `<tr><td class="cell-strong mono" style="font-size:12px">${c.name}</td><td>${c.owner}</td><td><span class="mono" style="font-size:11px">${c.scope}</span></td><td>${c.quota}</td><td style="text-align:right"><button class="btn ghost sm" data-act="api-revoke" data-i="${idx}" style="color:var(--accent)">İptal</button></td></tr>`).join('');
+        return `<div class="panel"><div class="panel-head"><h3>Dış API istemcileri</h3><button class="btn primary sm" data-act="api-add">+ İstemci oluştur</button></div><div class="tbl-wrap"><table class="tbl"><thead><tr><th>İstemci</th><th>Sahip</th><th>Scope</th><th>Kota</th><th></th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
+      }
     }
     return '';
+  }
+  let adminBound = false;
+  function initAdminActions() {
+    if (adminBound) return; adminBound = true;
+    $('#admin-panes').addEventListener('click', e => {
+      const btn = e.target.closest('[data-act]'); if (!btn) return;
+      const act = btn.dataset.act, i = +btn.dataset.i;
+      if (act === 'credit-approve') { const r = creditReqs.splice(i, 1)[0]; refreshPane(2); updateAdminBadge(); toast('Talep onaylandı', `${r.name} için ${r.credit} kredi eklendi.`, 'ok'); }
+      else if (act === 'credit-reject') { const r = creditReqs.splice(i, 1)[0]; refreshPane(2); updateAdminBadge(); toast('Talep reddedildi', `${r.name} talebi reddedildi.`, 'info'); }
+      else if (act === 'model-toggle') { const id = btn.dataset.id; modelPub[id] = !modelPub[id]; refreshPane(3); toast('Model güncellendi', modelPub[id] ? 'Model yayına alındı.' : 'Model yayından kaldırıldı.', 'info'); }
+      else if (act === 'gr-add') { guardrailModal(); }
+      else if (act === 'gr-del') { guardrails.splice(i, 1); refreshPane(6); toast('Politika kaldırıldı', ''); }
+      else if (act === 'api-add') { apiClientModal(); }
+      else if (act === 'api-revoke') { apiClients.splice(i, 1); refreshPane(8); toast('İstemci iptal edildi', ''); }
+      else if (act === 'user-role') { userRoleModal(i); }
+      else if (act === 'user-add') { toast('Statik kullanıcı', 'Kullanıcı oluşturma formu (demo).', 'info'); }
+    });
+  }
+  function guardrailModal() {
+    openModal(`<div class="modal-head"><h3>Yeni guardrail politikası</h3><button class="x">✕</button></div>
+      <div class="modal-body">
+        <div class="field"><label>Politika adı</label><input class="input" id="gr-name" placeholder="Örn. Müşteri verisi filtresi"></div>
+        <div class="field"><label>Kapsam</label><input class="input" id="gr-scope" placeholder="Örn. Chat + Çözümler"></div>
+        <div class="field"><label>Uygulama modu</label><select class="select" id="gr-mode"><option value="enforced">enforced (engelle)</option><option value="önce logla">önce logla</option></select></div>
+      </div>
+      <div class="modal-foot"><button class="btn outline" id="gr-cancel">Vazgeç</button><button class="btn primary" id="gr-save">Ekle</button></div>`);
+    $('#modal-inner .x').addEventListener('click', closeModal);
+    $('#gr-cancel').addEventListener('click', closeModal);
+    $('#gr-save').addEventListener('click', () => { const name = $('#gr-name').value.trim() || 'Yeni politika'; guardrails.unshift({ name, scope: $('#gr-scope').value.trim() || 'Tüm modeller', mode: $('#gr-mode').value }); refreshPane(6); closeModal(); toast('Politika eklendi', name, 'ok'); });
+  }
+  function apiClientModal() {
+    const secret = 'tt_cli_' + Math.random().toString(36).slice(2, 12) + Math.random().toString(36).slice(2, 10);
+    openModal(`<div class="modal-head"><h3>Yeni API istemcisi</h3><button class="x">✕</button></div>
+      <div class="modal-body">
+        <div class="field"><label>İstemci adı</label><input class="input" id="cl-name" placeholder="Örn. mobil-uygulama"></div>
+        <div class="field"><label>Sahip</label><input class="input" id="cl-owner" placeholder="Örn. BT / Mobil"></div>
+        <div class="field"><label>Scope</label><input class="input" id="cl-scope" placeholder="chat:invoke, solutions:cv-analysis"></div>
+        <div class="field"><label>Kota</label><input class="input" id="cl-quota" value="1K istek/gün"></div>
+        <div id="cl-created" style="display:none"><label style="font-size:12.5px;font-weight:600;color:var(--text-2)">İstemci secret'ı (yalnızca bir kez gösterilir)</label><div class="key-box" style="margin-top:6px"><span>${secret}</span><button class="btn outline sm" id="cl-copy">Kopyala</button></div></div>
+      </div>
+      <div class="modal-foot" id="cl-foot"><button class="btn outline" id="cl-cancel">Vazgeç</button><button class="btn primary" id="cl-create">Oluştur</button></div>`);
+    $('#modal-inner .x').addEventListener('click', closeModal);
+    $('#cl-cancel').addEventListener('click', closeModal);
+    $('#cl-create').addEventListener('click', () => {
+      const name = $('#cl-name').value.trim() || 'yeni-istemci';
+      apiClients.unshift({ name, owner: $('#cl-owner').value.trim() || '—', scope: $('#cl-scope').value.trim() || 'chat:invoke', quota: $('#cl-quota').value.trim() || '1K istek/gün' });
+      $('#cl-created').style.display = 'block';
+      $('#cl-foot').innerHTML = '<button class="btn primary" id="cl-done">Bitti</button>';
+      $('#cl-done').addEventListener('click', closeModal);
+      refreshPane(8); toast('İstemci oluşturuldu', 'Secret yalnızca bir kez gösterilir.', 'ok');
+    });
+    document.addEventListener('click', e => { if (e.target.id === 'cl-copy') toast('Kopyalandı', 'Secret panoya kopyalandı.', 'ok'); });
+  }
+  function userRoleModal(idx) {
+    const u = adminUsers[idx]; const roles = ['super', 'admin', 'dept', 'editor', 'user'];
+    openModal(`<div class="modal-head"><h3>Rol ata · ${u.name}</h3><button class="x">✕</button></div>
+      <div class="modal-body">
+        <div class="field"><label>Rol</label><select class="select" id="ur-role">${roles.map(r => `<option value="${r}" ${r === u.role ? 'selected' : ''}>${ROLE_LABEL[r]}</option>`).join('')}</select></div>
+        <p style="font-size:12px;color:var(--text-3)">Rol, kullanıcının erişebileceği modülleri ve yetkileri belirler.</p>
+      </div>
+      <div class="modal-foot"><button class="btn outline" id="ur-cancel">Vazgeç</button><button class="btn primary" id="ur-save">Kaydet</button></div>`);
+    $('#modal-inner .x').addEventListener('click', closeModal);
+    $('#ur-cancel').addEventListener('click', closeModal);
+    $('#ur-save').addEventListener('click', () => { adminUsers[idx].role = $('#ur-role').value; refreshPane(1); closeModal(); toast('Rol güncellendi', `${u.name} → ${ROLE_LABEL[adminUsers[idx].role]}`, 'ok'); });
   }
   function drawAdminCharts() {
     if ($('#admin-line')) lineChart($('#admin-line'), [12000, 14500, 13800, 16200, 18400, 9200, 11000], getVar('--accent'));

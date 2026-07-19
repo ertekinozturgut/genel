@@ -277,15 +277,18 @@
       <section class="view" id="v-solutions">
         <div class="page-head">
           <h2>Operasyonel AI Çözümleri</h2>
-          <p>Sık tekrarlanan iş görevleri için form tabanlı, tek tıkla çalışan AI hizmetleri. Her çözüm Azure AI Foundry veya n8n motoruyla çalışabilir.</p>
+          <p>Sık tekrarlanan iş görevleri için form tabanlı, tek tıkla çalışan AI hizmetleri. Bir çözüm seç, formu doldur, sonucu al.</p>
         </div>
         <div id="solutions-catalog" class="grid g-3"></div>
 
         <div id="solution-detail" style="display:none">
-          <button class="btn ghost sm" id="sol-back" style="margin-bottom:14px">‹ Tüm çözümler</button>
-          <div class="page-head" style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+          <button class="btn outline sol-back-btn" id="sol-back">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+            Tüm çözümlere dön
+          </button>
+          <div class="page-head" style="display:flex;align-items:center;gap:14px">
+            <div class="sol-detail-ico" id="sol-detail-ico"></div>
             <div><h2 id="sol-title"></h2><p id="sol-desc"></p></div>
-            <span id="sol-engine"></span>
           </div>
           <div class="solution-run">
             <div class="panel">
