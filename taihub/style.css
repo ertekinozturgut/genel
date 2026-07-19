@@ -59,6 +59,62 @@
   --accent-weak:rgba(34,224,255,0.13); --danger:#ff5064;
 }
 
+/* ================= AÇIK (LIGHT) TEMA ================= */
+:root[data-mode="light"]{
+  --accent:#e00016; --accent-rgb:224,0,22; --accent-2:#ff3b4a;
+  --cyan:#0891b2; --cyan-rgb:8,145,178;
+
+  --bg-0:#e7ecf4; --bg:#f2f5fb;
+  --surface:rgba(255,255,255,0.72);
+  --surface-solid:#ffffff;
+  --surface-2:rgba(255,255,255,0.55);
+  --surface-3:rgba(24,44,96,0.06);
+  --border:rgba(28,48,96,0.12);
+  --border-strong:rgba(28,48,96,0.20);
+
+  --text:#141922; --text-2:#4a5468; --text-3:#8791a3;
+
+  --ok:#12a150; --ok-weak:rgba(18,161,80,0.12);
+  --warn:#b7791f; --warn-weak:rgba(183,121,31,0.12);
+  --info:#2563eb; --info-weak:rgba(37,99,235,0.10);
+  --danger:#e00016; --accent-weak:rgba(224,0,22,0.09); --accent-contrast:#fff;
+
+  --glow:0 2px 12px rgba(var(--accent-rgb),0.28);
+  --glow-cyan:0 2px 12px rgba(8,145,178,0.28);
+  --shadow-sm:0 1px 3px rgba(20,30,60,0.08);
+  --shadow-md:0 8px 24px rgba(20,30,60,0.12);
+  --shadow-lg:0 24px 60px rgba(20,30,60,0.22);
+
+  --glass:linear-gradient(158deg, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.66) 60%, rgba(248,250,255,0.7) 100%);
+  --glass-sheen:linear-gradient(180deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0) 40%), radial-gradient(150px 90px at 100% 0%, rgba(255,255,255,0.55), transparent 70%);
+  --glass-blur:blur(18px) saturate(140%);
+  --glass-edge:inset 0 1px 0 rgba(255,255,255,0.8), inset 0 0 0 1px rgba(255,255,255,0.35);
+  --glass-shadow:0 8px 26px rgba(20,34,70,0.10);
+}
+:root[data-mode="light"][data-accent="cyan"]{ --accent:#0aa5c8; --accent-rgb:10,165,200; --accent-2:#33c0dd; --accent-weak:rgba(10,165,200,0.12); }
+
+:root[data-mode="light"] body{
+  background:
+    radial-gradient(1200px 700px at 80% -14%, rgba(var(--accent-rgb),0.08), transparent 60%),
+    radial-gradient(900px 600px at 8% 112%, rgba(8,145,178,0.07), transparent 55%),
+    linear-gradient(180deg, #f6f9fd 0%, #e8edf5 100%);
+}
+:root[data-mode="light"] #bg-stars{ opacity:0.35; }
+:root[data-mode="light"] .grid-overlay{ background-image:linear-gradient(rgba(40,64,130,0.05) 1px,transparent 1px), linear-gradient(90deg, rgba(40,64,130,0.05) 1px,transparent 1px); }
+:root[data-mode="light"] .scanlines{ display:none; }
+:root[data-mode="light"] .sidebar{ background:linear-gradient(180deg, rgba(255,255,255,0.82), rgba(248,250,254,0.9)); }
+:root[data-mode="light"] .topbar,
+:root[data-mode="light"] .chat-bar,
+:root[data-mode="light"] .composer,
+:root[data-mode="light"] .chat-side{ background:rgba(255,255,255,0.7); }
+:root[data-mode="light"] .login-hero{ background:linear-gradient(150deg, #fff2f3 0%, #eef4ff 70%, #f6f8ff 100%); border-right:1px solid var(--border); }
+:root[data-mode="light"] .engine-n8n{ background:rgba(124,58,237,0.1); color:#7c3aed; border-color:rgba(124,58,237,0.3); }
+:root[data-mode="light"] .role-pill.super{ background:rgba(124,58,237,0.12); color:#7c3aed; }
+:root[data-mode="light"] .code-block{ background:#0f1626; color:#c9d6f0; border-color:transparent; }
+/* aktif menü öğesi açık zeminde vurgu rengiyle okunur (beyaz yerine) */
+:root[data-mode="light"] .nav-item.active{ color:var(--accent); }
+:root[data-mode="light"] .nav-item.active .nav-badge{ color:#fff; }
+
 *{ box-sizing:border-box; margin:0; padding:0; }
 html,body{ height:100%; }
 body{

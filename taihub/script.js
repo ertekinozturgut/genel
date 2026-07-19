@@ -3,6 +3,7 @@
    ============================================================ */
 (() => {
   'use strict';
+  let STAR_COLOR = '#a7c4ff';
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const el = (tag, cls, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; };
@@ -239,6 +240,23 @@
   let accent = 'red'; applyAccent('red');
   $('#theme-btn').addEventListener('click', () => { accent = accent === 'red' ? 'cyan' : 'red'; applyAccent(accent); toast('Vurgu rengi', accent === 'cyan' ? 'Cyan neon' : 'Kırmızı neon', 'info'); });
 
+  /* ---------------- AÇIK / KOYU MOD ---------------- */
+  const SUN = '<circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.4M12 19.1v2.4M2.5 12h2.4M19.1 12h2.4M5.2 5.2l1.7 1.7M17.1 17.1l1.7 1.7M18.8 5.2l-1.7 1.7M6.9 17.1l-1.7 1.7"/>';
+  const MOON = '<path d="M20.5 13.3A8.2 8.2 0 1 1 10.7 3.5 6.4 6.4 0 0 0 20.5 13.3z"/>';
+  function applyMode(m) {
+    document.documentElement.setAttribute('data-mode', m);
+    STAR_COLOR = m === 'light' ? 'rgba(90,110,150,0.9)' : '#a7c4ff';
+    $('#mode-ico').innerHTML = m === 'light' ? MOON : SUN;   // gösterilen ikon = geçilecek mod
+    redrawRings();
+    if ($('#v-credits').classList.contains('active')) drawCredits();
+    if ($('#v-admin').classList.contains('active')) drawAdminCharts();
+    try { localStorage.setItem('taihub_mode', m); } catch (e) {}
+  }
+  let mode = 'dark';
+  try { mode = localStorage.getItem('taihub_mode') || 'dark'; } catch (e) {}
+  applyMode(mode);
+  $('#mode-btn').addEventListener('click', () => { mode = mode === 'dark' ? 'light' : 'dark'; applyMode(mode); toast('Görünüm', mode === 'light' ? 'Açık tema' : 'Koyu tema', 'info'); });
+
   /* ---------------- STARFIELD ---------------- */
   function initStars() {
     const c = $('#bg-stars'); if (!c) return;
@@ -250,7 +268,7 @@
       for (const s of stars) {
         if (moving) { s.x -= s.z * 0.11; s.tw += 0.014; if (s.x < -3) s.x = w + 3; }
         const a = 0.32 + Math.sin(s.tw) * 0.3;
-        ctx.globalAlpha = Math.max(0, a); ctx.fillStyle = '#a7c4ff';
+        ctx.globalAlpha = Math.max(0, a); ctx.fillStyle = STAR_COLOR;
         ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, 6.28); ctx.fill();
       }
       ctx.globalAlpha = 1; requestAnimationFrame(draw);
