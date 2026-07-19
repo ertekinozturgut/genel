@@ -79,17 +79,20 @@
       <button class="nav-item active" data-view="dashboard" data-help="Başlangıç ekranı — kredin, kısayollar ve öne çıkanlar burada."><span class="ico">◧</span>Ana Sayfa</button>
       <button class="nav-item" data-view="chat" data-help="Yapay zekaya mesajlaşma gibi soru sor, yazdır, özetlet."><span class="ico">💬</span>AI Sohbet</button>
       <button class="nav-item" data-view="solutions" data-help="Tek tıkla çalışan hazır araçlar: dosya oku, sesi yazıya çevir, çeviri yap."><span class="ico">⚡</span>Operasyonel AI</button>
+      <button class="nav-item" data-view="azure" data-help="Kullanıma hazır Azure AI servisleri — Document Intelligence, Video Indexer, Speech ve chat deneyimi."><span class="ico">☁</span>Azure Çözümleri</button>
       <button class="nav-item" data-view="agents" data-help="Belirli konularda uzman, hazır kurulu yardımcılar (İK, BT, Satış…)."><span class="ico">🤖</span>Copilot Ajanları</button>
 
       <div class="nav-section">Keşfet</div>
       <button class="nav-item" data-view="showcase" data-help="Kurumda üretilen tüm AI çözümlerinin sergilendiği vitrin."><span class="ico">✦</span>AI Vitrini</button>
       <button class="nav-item" data-view="libraries" data-help="Hazır prompt, kural ve şablonlar — kopyala, sohbette kullan."><span class="ico">📚</span>Kütüphaneler</button>
       <button class="nav-item" data-view="mcp" data-help="Yapay zekayı kurumsal sistemlere bağlayan araç kutuları."><span class="ico">🔌</span>MCP Hub</button>
+      <button class="nav-item" data-view="n8n" data-help="Görsel iş akışı otomasyonu paneli (n8n)."><span class="ico">🔀</span>n8n Akışları</button>
       <button class="nav-item" data-view="training" data-help="AI'ı öğrenmek için kısa video ve dersler, ilerleme takibi."><span class="ico">🎓</span>Eğitim Merkezi</button>
 
       <div class="nav-section">Hesabım</div>
       <button class="nav-item" data-view="credits" data-help="Kalan kredin, harcama grafiğin ve ek kredi talebi."><span class="ico">◍</span>Kredi &amp; Kullanım</button>
       <button class="nav-item" data-view="history" data-help="Önceki sohbetlerin ve AI kullanımların — kaldığın yerden devam et."><span class="ico">🕑</span>Geçmişim</button>
+      <button class="nav-item" data-view="feedback" data-help="Platform hakkında görüş ve önerini paylaş."><span class="ico">✎</span>Görüş &amp; Öneri</button>
 
       <div class="nav-section">Yönetim</div>
       <button class="nav-item" data-view="admin" data-help="Yöneticiler için: kullanıcılar, krediler, modeller ve raporlar."><span class="ico">⚙</span>Yönetim Paneli<span class="nav-badge">4</span></button>
@@ -399,6 +402,77 @@
         </div>
         <div class="filter-row" id="history-filter"></div>
         <div class="panel"><div class="tbl-wrap"><table class="tbl" id="history-tbl"></table></div></div>
+      </section>
+
+      <!-- ===== AZURE ÇÖZÜMLERİ ===== -->
+      <section class="view" id="v-azure">
+        <div class="page-head">
+          <h2>Azure AI Çözümleri</h2>
+          <p>Kullanıma hazır Azure AI servisleri. Bir servisi aç, dosyanı ver veya sohbet ederek sonucu al.</p>
+        </div>
+        <div class="grid g-3" id="azure-grid"></div>
+
+        <div id="azure-detail" style="display:none">
+          <button class="btn outline sol-back-btn" id="azure-back">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+            Tüm Azure servisleri
+          </button>
+          <div class="page-head" style="display:flex;align-items:center;gap:14px">
+            <div class="sol-detail-ico" id="azure-ico"></div>
+            <div><h2 id="azure-title"></h2><p id="azure-desc"></p></div>
+          </div>
+          <div class="panel" style="display:flex;flex-direction:column;height:520px;padding:0;overflow:hidden">
+            <div class="chat-scroll" style="flex:1"><div class="chat-inner" id="azure-chat" style="max-width:none"></div></div>
+            <div class="composer" style="border-radius:0">
+              <div class="composer-inner">
+                <div class="composer-box">
+                  <textarea id="azure-input" rows="1" placeholder="Bu servise bir soru sor veya dosya bağlamını yaz…"></textarea>
+                  <div class="composer-tools"><button class="btn primary sm composer-send" id="azure-send">Gönder</button></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== n8n ===== -->
+      <section class="view full" id="v-n8n">
+        <div style="display:flex;flex-direction:column;height:calc(100vh - var(--topbar-h))">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 24px;border-bottom:1px solid var(--border)">
+            <div><b style="font-family:var(--font-display);letter-spacing:.5px">n8n İŞ AKIŞLARI</b><div style="font-size:12px;color:var(--text-3)">Görsel otomasyon paneli · self-hosted</div></div>
+            <button class="btn outline sm" id="n8n-open">Yeni sekmede aç ↗</button>
+          </div>
+          <div id="n8n-frame-wrap" style="flex:1;position:relative;background:var(--surface-solid)">
+            <iframe id="n8n-frame" src="https://n8n.taihub.toyota.com.tr" style="width:100%;height:100%;border:none" referrerpolicy="no-referrer"></iframe>
+            <div id="n8n-fallback" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:24px;background:var(--surface-solid)">
+              <div style="font-size:40px">🔀</div>
+              <div style="max-width:44ch;color:var(--text-2);font-size:13.5px">n8n paneli buraya gömülür. Bu önizlemede güvenlik politikası dış çerçeveyi engelleyebilir — gerçek kurulumda panel burada açılır ya da yeni sekmede kullanılabilir.</div>
+              <button class="btn primary sm" id="n8n-open2">n8n'i yeni sekmede aç ↗</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== GÖRÜŞ & ÖNERİ ===== -->
+      <section class="view" id="v-feedback">
+        <div class="page-head">
+          <h2>Görüş &amp; Öneri</h2>
+          <p>Platform hakkında düşüncelerini paylaş. Geri bildirimlerin ürün ekibine ve yöneticilere iletilir.</p>
+        </div>
+        <div class="grid g-2" style="grid-template-columns:1fr 1fr">
+          <div class="panel">
+            <div class="panel-head"><h3>Görüşünü paylaş</h3></div>
+            <div class="field" style="margin-bottom:12px"><label>Konu</label>
+              <select class="select" id="fb-topic"><option>Genel</option><option>AI Sohbet</option><option>Operasyonel AI</option><option>Kredi sistemi</option><option>Eğitim</option><option>Hata bildirimi</option><option>Yeni özellik önerisi</option></select></div>
+            <div class="field" style="margin-bottom:12px"><label>Memnuniyet</label><div class="rating" id="fb-rating"></div></div>
+            <div class="field" style="margin-bottom:12px"><label>Görüşün</label><textarea class="textarea" id="fb-text" placeholder="Neyi beğendin, neyi geliştirebiliriz?"></textarea></div>
+            <button class="btn primary block" id="fb-send">Gönder</button>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><h3>Son paylaşılanlar</h3></div>
+            <div id="fb-list"></div>
+          </div>
+        </div>
       </section>
 
       <!-- ===== ADMIN ===== -->

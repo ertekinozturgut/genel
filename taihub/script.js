@@ -101,6 +101,35 @@
     { ic: '✨', bg: 'var(--accent-weak)', t: 'Yeni model yayında', p: 'Claude Sonnet 4.5 artık sohbet ekranında.', time: '3 saat önce' },
   ];
 
+  // yönetilebilir koleksiyonlar için ek alanlar (admin panelinden düzenlenir)
+  SOLUTIONS.forEach(s => { s.active = true; s.endpoint = 'https://ai-gw.taihub.toyota.com.tr/solutions/' + s.key; });
+  AGENTS.forEach(a => { a.url = 'https://ajanlar.taihub.toyota.com.tr/' + encodeURIComponent(a.name.toLowerCase().replace(/\s+/g, '-')); });
+  TRAINING.forEach(t => { t.link = 'https://ogren.taihub.toyota.com.tr/' + encodeURIComponent(t.title.toLowerCase().replace(/\s+/g, '-')); t.content = t.content || `Bu öğrenme yolu ${t.lessons} kısa dersten oluşur. Videoları izleyip bölüm quizini tamamlayarak rozet kazanabilirsin.`; });
+
+  // Azure AI servisleri (Operasyonel AI › Azure Çözümleri)
+  const AZURE = [
+    { key: 'docint', icon: '📄', name: 'Azure AI Document Intelligence', desc: 'Fatura, form ve tablolardan yapılandırılmış veri çıkarımı.', hint: 'Fatura, makbuz veya form yükleyip alanları çıkarabilirsin.' },
+    { key: 'vidx', icon: '🎬', name: 'Azure Video Indexer', desc: 'Videolardan transkript, konu, yüz ve sahne analizi.', hint: 'Bir video kaydından konu, konuşmacı ve önemli anları çıkarır.' },
+    { key: 'vision', icon: '👁', name: 'Azure AI Vision', desc: 'Görüntü etiketleme, OCR ve nesne tanıma.', hint: 'Görselden metin okuma ve nesne tanıma yapabilirsin.' },
+    { key: 'speech', icon: '🎙', name: 'Azure AI Speech', desc: 'Sesten metne, metinden sese ve konuşmacı ayrımı.', hint: 'Ses kaydını yazıya çevirir, özet çıkarır.' },
+    { key: 'language', icon: '🈳', name: 'Azure AI Language', desc: 'Varlık tanıma, duygu analizi, özetleme ve çeviri.', hint: 'Metin analizi, duygu ve anahtar ifade çıkarımı yapar.' },
+    { key: 'search', icon: '🔎', name: 'Azure AI Search', desc: 'Kurumsal doküman üzerinde anlamsal arama (RAG).', hint: 'Belgeler üzerinde kaynak atıflı soru-cevap yapabilirsin.' },
+  ];
+
+  // Görüş & Öneri (kullanıcı gönderimleri, yönetim panelinde listelenir)
+  let feedback = [
+    { topic: 'AI Sohbet', rating: 5, text: 'Model seçimi ve kredi şeffaflığı çok iyi olmuş, günlük işimi hızlandırdı.', user: 'Ayşe D.', time: '2 saat önce' },
+    { topic: 'Eğitim', rating: 4, text: 'Prompt eğitimi faydalıydı; daha çok örnek video olabilir.', user: 'Mehmet K.', time: 'Dün' },
+    { topic: 'Yeni özellik önerisi', rating: 5, text: 'Toplantı asistanının Outlook entegrasyonu harika olur.', user: 'Can Y.', time: '2 gün önce' },
+  ];
+
+  // AI Vitrini › RPA ve Workflow içerikleri (admin yönetir)
+  SHOWCASE.push(
+    { title: 'Fatura Onay Akışı (RPA)', cat: 'RPA/Workflow', dept: 'Finans', status: 'Canlı', desc: 'Gelen faturayı okuyup onay zincirini otomatik yürüten uçtan uca robot.', metric: '640 akış/ay', link: 'n8n', owner: 'Finans & RPA', story: 'Fatura onayı e-postalarda takılıyordu. Bu RPA akışı faturayı okuyup ilgili yöneticiye onaya gönderiyor, onaylanınca ERP\'ye işliyor.', metrics: [['640', 'Aylık akış'], ['%98', 'Başarı'], ['~3dk', 'Ortalama süre']] },
+    { title: 'Personel İşe Başlatma (Workflow)', cat: 'RPA/Workflow', dept: 'İnsan Kaynakları', status: 'Pilot', desc: 'Yeni çalışan için hesap açma, ekipman ve eğitim atamalarını tetikleyen akış.', metric: '12 adım', link: 'n8n', owner: 'İK & BT', story: 'İşe başlatma birçok sistemde manuel adım içeriyordu. Workflow tüm adımları tek tetikle koordine ediyor.', metrics: [['12', 'Otomatik adım'], ['1 gün', 'Kurulum süresi'], ['Pilot', 'Durum']] },
+    { title: 'Stok Uyarı Botu (RPA)', cat: 'RPA/Workflow', dept: 'Lojistik', status: 'Geliştirmede', desc: 'Kritik stok seviyesinde otomatik sipariş taslağı ve Teams bildirimi.', metric: '—', link: 'n8n', owner: 'Lojistik', story: 'Stok takibi elle yapılıyordu. Bot seviyeleri izleyip kritik durumda sipariş taslağı hazırlıyor.', metrics: [['7/24', 'İzleme'], ['Teams', 'Bildirim'], ['Geliştirmede', 'Durum']] },
+  );
+
   /* ---------------- CANVAS HELPERS ---------------- */
   function ring(canvas, pct, color, opts = {}) {
     const ctx = canvas.getContext('2d');
@@ -194,7 +223,7 @@
   $('#static-toggle').addEventListener('click', () => $('#static-form').classList.toggle('open'));
 
   /* ---------------- NAV / VIEW SWITCH ---------------- */
-  const TITLES = { dashboard: 'Ana Sayfa', chat: 'AI Sohbet', solutions: 'Operasyonel AI', agents: 'Copilot Ajanları', showcase: 'AI Vitrini', libraries: 'Kütüphaneler', mcp: 'MCP Hub', training: 'Eğitim Merkezi', credits: 'Kredi & Kullanım', history: 'Geçmişim', admin: 'Yönetim Paneli' };
+  const TITLES = { dashboard: 'Ana Sayfa', chat: 'AI Sohbet', solutions: 'Operasyonel AI', azure: 'Azure Çözümleri', agents: 'Copilot Ajanları', showcase: 'AI Vitrini', libraries: 'Kütüphaneler', mcp: 'MCP Hub', n8n: 'n8n Akışları', training: 'Eğitim Merkezi', credits: 'Kredi & Kullanım', history: 'Geçmişim', feedback: 'Görüş & Öneri', admin: 'Yönetim Paneli' };
   function goto(view) {
     $$('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.view === view));
     $$('.view').forEach(v => v.classList.toggle('active', v.id === 'v-' + view));
@@ -214,7 +243,8 @@
   function revealView(id) {
     if (document.body.classList.contains('reduce-motion')) return;
     const v = document.getElementById(id); if (!v || v.classList.contains('full')) return;
-    const items = [...v.querySelectorAll('.stat-card, .acard, .card, .panel, .path-card')];
+    const items = [...v.querySelectorAll('.stat-card, .acard, .card, .panel, .path-card')]
+      .filter(it => !it.closest('.admin-pane:not(.active)') && !it.closest('.tabpane:not(.active)') && !it.closest('#solution-detail') && !it.closest('#azure-detail'));
     items.forEach((it, i) => {
       it.classList.remove('reveal-item'); it.style.animationDelay = '';
       void it.offsetWidth;
@@ -331,27 +361,37 @@
     $('#sc-close').addEventListener('click', closeModal);
     $('#sc-go').addEventListener('click', () => { closeModal(); goto(s.link); });
   }
+  let showcaseBound = false;
+  function scDraw(cat) { $('#showcase-catalog').innerHTML = SHOWCASE.filter(s => cat === 'Tümü' || s.cat === cat).map(showcaseCard).join(''); }
   function renderShowcase() {
-    const cats = ['Tümü', 'Ajan', 'Proje', 'Çözüm', 'MCP'];
-    $('#showcase-filter').innerHTML = cats.map((c, i) => `<button class="fchip ${i === 0 ? 'active' : ''}" data-cat="${c}">${c}</button>`).join('');
-    const draw = (cat) => $('#showcase-catalog').innerHTML = SHOWCASE.filter(s => cat === 'Tümü' || s.cat === cat).map(showcaseCard).join('');
-    draw('Tümü');
-    $('#showcase-filter').addEventListener('click', e => { const b = e.target.closest('.fchip'); if (!b) return; $$('#showcase-filter .fchip').forEach(x => x.classList.remove('active')); b.classList.add('active'); draw(b.dataset.cat); });
+    const active = $('#showcase-filter .fchip.active');
+    const cur = active ? active.dataset.cat : 'Tümü';
+    const cats = ['Tümü', 'Ajan', 'Proje', 'Çözüm', 'MCP', 'RPA/Workflow'];
+    $('#showcase-filter').innerHTML = cats.map(c => `<button class="fchip ${c === cur ? 'active' : ''}" data-cat="${c}">${c}</button>`).join('');
+    scDraw(cur);
+    if (!showcaseBound) { showcaseBound = true; $('#showcase-filter').addEventListener('click', e => { const b = e.target.closest('.fchip'); if (!b) return; $$('#showcase-filter .fchip').forEach(x => x.classList.remove('active')); b.classList.add('active'); scDraw(b.dataset.cat); }); }
   }
   // Vitrin "Detay" butonları — dashboard ve vitrin ızgarasının ikisinde de çalışır
   document.addEventListener('click', e => { const b = e.target.closest('.sc-detail'); if (b) openShowcase(b.dataset.t); });
 
   /* ---------------- AGENTS ---------------- */
-  function renderAgents() {
-    const depts = ['Tümü', ...new Set(AGENTS.map(a => a.dept))];
-    $('#agents-filter').innerHTML = depts.map((d, i) => `<button class="fchip ${i === 0 ? 'active' : ''}" data-d="${d}">${d}</button>`).join('');
+  let agentsBound = false;
+  function drawAgents(d) {
     const card = a => `<div class="acard"><div class="ac-top"><div class="ac-ico">🤖</div><span class="chip ${a.status === 'ok' ? 'ok' : 'warn'}"><span class="dt"></span>${a.status === 'ok' ? 'Aktif' : 'Bakımda'}</span></div>
       <div class="ac-body"><h4>${a.name}</h4><div class="ac-desc">${a.desc}</div><div class="tag-row">${a.tags.map(t => `<span class="chip">#${t}</span>`).join('')}</div>
       <div class="ac-meta"><span>${a.dept}</span><span>·</span><span>${a.uses.toLocaleString('tr')} kullanım</span></div></div>
-      <div class="ac-foot"><span class="dim" style="font-size:11.5px">SSO ile kimlik taşınır</span><button class="btn primary sm" data-goto="chat">Konuş</button></div></div>`;
-    const draw = d => $('#agents-catalog').innerHTML = AGENTS.filter(a => d === 'Tümü' || a.dept === d).map(card).join('');
-    draw('Tümü');
-    $('#agents-filter').addEventListener('click', e => { const b = e.target.closest('.fchip'); if (!b) return; $$('#agents-filter .fchip').forEach(x => x.classList.remove('active')); b.classList.add('active'); draw(b.dataset.d); });
+      <div class="ac-foot"><span class="dim" style="font-size:11.5px">SSO ile kimlik taşınır</span><button class="btn primary sm agent-use" data-url="${a.url}">Kullan ↗</button></div></div>`;
+    $('#agents-catalog').innerHTML = AGENTS.filter(a => d === 'Tümü' || a.dept === d).map(card).join('') || '<div class="dim" style="padding:20px">Bu departmanda ajan yok.</div>';
+  }
+  function renderAgents() {
+    const depts = ['Tümü', ...new Set(AGENTS.map(a => a.dept))];
+    $('#agents-filter').innerHTML = depts.map((d, i) => `<button class="fchip ${i === 0 ? 'active' : ''}" data-d="${d}">${d}</button>`).join('');
+    drawAgents('Tümü');
+    if (!agentsBound) {
+      agentsBound = true;
+      $('#agents-filter').addEventListener('click', e => { const b = e.target.closest('.fchip'); if (!b) return; $$('#agents-filter .fchip').forEach(x => x.classList.remove('active')); b.classList.add('active'); drawAgents(b.dataset.d); });
+      $('#agents-catalog').addEventListener('click', e => { const b = e.target.closest('.agent-use'); if (b) { window.open(b.dataset.url, '_blank'); toast('Ajan açılıyor', 'Ajan yeni sekmede açıldı.', 'info'); } });
+    }
   }
 
   /* ---------------- LIBRARIES ---------------- */
@@ -363,20 +403,24 @@
       <div class="ac-desc mono" style="font-size:11.5px;background:var(--surface-2);padding:10px;border-radius:6px;border:1px solid var(--border)">${it.body}</div>
       <div class="tag-row">${it.tags.map(t => `<span class="chip">#${t}</span>`).join('')}</div></div>
       <div class="ac-foot"><span class="dim" style="font-size:11.5px">${it.copies} kopyalama</span><div style="display:flex;gap:6px"><button class="btn ghost sm lib-copy">Kopyala</button><button class="btn outline sm" data-goto="chat">Chat'te aç</button></div></div></div>`).join('');
-    draw(keys[0]);
+    const activeTab = $('#lib-tabs .tab.active'); draw(activeTab ? activeTab.dataset.lib : keys[0]);
+    if (renderLibraries.bound) return; renderLibraries.bound = true;
     $('#lib-tabs').addEventListener('click', e => { const b = e.target.closest('.tab'); if (!b) return; $$('#lib-tabs .tab').forEach(x => x.classList.remove('active')); b.classList.add('active'); draw(b.dataset.lib); });
     $('#lib-content').addEventListener('click', e => { if (e.target.classList.contains('lib-copy')) toast('Kopyalandı', 'İçerik panoya kopyalandı.', 'ok'); });
   }
 
   /* ---------------- SOLUTIONS ---------------- */
   function renderSolutions() {
-    $('#solutions-catalog').innerHTML = SOLUTIONS.map(s => `
+    $('#solutions-catalog').innerHTML = SOLUTIONS.filter(s => s.active !== false).map(s => `
       <div class="acard sol-card" data-key="${s.key}"><div class="ac-top"><div class="ac-ico">${s.icon}</div></div>
       <div class="ac-body"><h4>${s.name}</h4><div class="ac-desc">${s.desc}</div></div>
       <div class="ac-foot"><span class="dim" style="font-size:11.5px">~${s.cost} kredi</span><button class="btn primary sm">Çalıştır ›</button></div></div>`).join('');
     $$('.sol-card').forEach(c => c.addEventListener('click', () => openSolution(c.dataset.key)));
-    $('#sol-back').addEventListener('click', () => { $('#solution-detail').style.display = 'none'; $('#solutions-catalog').style.display = 'grid'; $('#content').scrollTop = 0; });
-    $('#sol-run').addEventListener('click', runSolution);
+    if (!renderSolutions.bound) {
+      renderSolutions.bound = true;
+      $('#sol-back').addEventListener('click', () => { $('#solution-detail').style.display = 'none'; $('#solutions-catalog').style.display = 'grid'; $('#content').scrollTop = 0; });
+      $('#sol-run').addEventListener('click', runSolution);
+    }
   }
   let currentSol = null;
   function openSolution(key) {
@@ -516,19 +560,47 @@
   $('#mcp-tabs').addEventListener('click', e => { const b = e.target.closest('.tab'); if (!b) return; $$('#mcp-tabs .tab').forEach(x => x.classList.remove('active')); b.classList.add('active'); $('#mcp-catalog').classList.toggle('active', b.dataset.mcp === 'catalog'); $('#mcp-keys').classList.toggle('active', b.dataset.mcp === 'keys'); });
 
   /* ---------------- TRAINING ---------------- */
+  const LESSONS = [
+    { t: 'Prompt nedir? Temel yapı', type: 'Video · 6 dk', done: true },
+    { t: 'Rol, bağlam ve talimat verme', type: 'Makale', done: true },
+    { t: 'Few-shot örneklerle yönlendirme', type: 'Video · 9 dk', done: true },
+    { t: 'Değişkenli şablonlar ve kütüphane', type: 'Makale', done: false },
+    { t: 'Bölüm quizi', type: 'Quiz · 8 soru', done: false },
+  ];
   function renderTraining() {
-    $('#training-paths').innerHTML = TRAINING.map(t => `
-      <div class="card path-card"><div class="pc-head"><div class="path-ico" style="background:${t.bg}">${t.icon}</div><div><h4 style="font-size:14.5px;font-weight:600">${t.title}</h4><span class="dim" style="font-size:12px">${t.lessons} ders</span></div></div>
+    $('#training-paths').innerHTML = TRAINING.map((t, i) => `
+      <div class="card path-card tr-card" data-tr="${i}" style="cursor:pointer"><div class="pc-head"><div class="path-ico" style="background:${t.bg}">${t.icon}</div><div><h4 style="font-size:14.5px;font-weight:600">${t.title}</h4><span class="dim" style="font-size:12px">${t.lessons} ders</span></div></div>
       <div class="bar ${t.pct === 100 ? 'ok' : ''}"><i style="width:${t.pct}%"></i></div>
-      <div style="display:flex;justify-content:space-between;align-items:center"><span class="dim" style="font-size:12px">${t.pct === 100 ? '✓ Tamamlandı' : t.pct === 0 ? 'Başlanmadı' : '%' + t.pct + ' tamamlandı'}</span><button class="btn ${t.pct === 0 ? 'primary' : 'outline'} sm">${t.pct === 0 ? 'Başla' : t.pct === 100 ? 'Tekrar et' : 'Devam et'}</button></div></div>`).join('');
-    const lessons = [
-      { t: 'Prompt nedir? Temel yapı', type: 'Video · 6 dk', done: true },
-      { t: 'Rol, bağlam ve talimat verme', type: 'Makale', done: true },
-      { t: 'Few-shot örneklerle yönlendirme', type: 'Video · 9 dk', done: true },
-      { t: 'Değişkenli şablonlar ve kütüphane', type: 'Makale', done: false },
-      { t: 'Bölüm quizi', type: 'Quiz · 8 soru', done: false },
-    ];
-    $('#training-lessons').innerHTML = lessons.map(l => `<div class="lesson ${l.done ? 'done' : ''}"><div class="l-check">✓</div><div style="flex:1"><div style="font-size:13.5px;font-weight:${l.done ? 500 : 600}">${l.t}</div><div class="l-type">${l.type}</div></div>${l.done ? '<span class="chip ok">Tamamlandı</span>' : '<button class="btn outline sm">Başla</button>'}</div>`).join('');
+      <div style="display:flex;justify-content:space-between;align-items:center"><span class="dim" style="font-size:12px">${t.pct === 100 ? '✓ Tamamlandı' : t.pct === 0 ? 'Başlanmadı' : '%' + t.pct + ' tamamlandı'}</span><button class="btn ${t.pct === 0 ? 'primary' : 'outline'} sm">${t.pct === 0 ? 'Başla' : t.pct === 100 ? 'Tekrar et' : 'Devam et'} ›</button></div></div>`).join('');
+    $('#training-lessons').innerHTML = LESSONS.map((l, i) => `<div class="lesson click" data-ls="${i}"><div class="l-check">✓</div><div style="flex:1"><div style="font-size:13.5px;font-weight:${l.done ? 500 : 600}">${l.t}</div><div class="l-type">${l.type}</div></div>${l.done ? '<span class="chip ok">Tamamlandı</span>' : '<button class="btn outline sm">Başla</button>'}</div>`).join('');
+    $$('.tr-card').forEach(c => c.addEventListener('click', () => trainingModal(TRAINING[+c.dataset.tr])));
+    $$('.lesson.click').forEach(c => c.addEventListener('click', () => lessonModal(LESSONS[+c.dataset.ls], TRAINING[1])));
+  }
+  function videoPoster(title, link) {
+    return `<div class="video-poster" onclick="window.open('${link}','_blank')"><span class="vp-badge chip solid">▶ Video</span><div class="vp-play">▶</div></div>`;
+  }
+  function trainingModal(t) {
+    openModal(`<div class="modal-head"><h3>${t.icon} ${t.title}</h3><button class="x">✕</button></div>
+      <div class="modal-body">
+        ${videoPoster(t.title, t.link)}
+        <p class="sc-story">${t.content}</p>
+        <div class="res-title">Dersler</div>
+        <div>${LESSONS.slice(0, t.lessons > 5 ? 5 : t.lessons).map(l => `<div class="lesson"><div class="l-check ${l.done ? '' : ''}" style="${l.done ? 'background:var(--ok);border-color:var(--ok);color:#04240f' : ''}">✓</div><div style="flex:1"><div style="font-size:13px">${l.t}</div><div class="l-type">${l.type}</div></div></div>`).join('')}</div>
+      </div>
+      <div class="modal-foot"><button class="btn outline" id="tr-close">Kapat</button><button class="btn primary" onclick="window.open('${t.link}','_blank')">Yeni sekmede aç ↗</button></div>`);
+    $('#modal-inner .x').addEventListener('click', closeModal);
+    $('#tr-close').addEventListener('click', closeModal);
+  }
+  function lessonModal(l, t) {
+    const link = t.link + '#' + encodeURIComponent(l.t);
+    openModal(`<div class="modal-head"><h3>${l.t}</h3><button class="x">✕</button></div>
+      <div class="modal-body">
+        ${l.type.includes('Video') ? videoPoster(l.t, link) : `<div class="res-quote">${l.t} — ${l.type}. İçerik burada gösterilir; tam sürüm için yeni sekmede açabilirsin.</div>`}
+        <p class="sc-story">${l.type} · Bu ders platform içinde izlenebilir veya yeni sekmede tam ekran açılabilir.</p>
+      </div>
+      <div class="modal-foot"><button class="btn outline" id="ls-close">Kapat</button><button class="btn primary" onclick="window.open('${link}','_blank')">Yeni sekmede aç ↗</button></div>`);
+    $('#modal-inner .x').addEventListener('click', closeModal);
+    $('#ls-close').addEventListener('click', closeModal);
   }
 
   /* ---------------- CREDITS ---------------- */
@@ -568,7 +640,7 @@
   }
 
   /* ---------------- ADMIN (çalışır durum yönetimli) ---------------- */
-  const ADMIN_TABS = ['Genel Bakış', 'Kullanıcılar', 'Kredi', 'Modeller', 'Çözümler', 'MCP', 'Guardrail', 'Loglar', 'Dış API'];
+  const ADMIN_TABS = ['Genel Bakış', 'Kullanıcılar', 'Kredi', 'Modeller', 'Çözümler', 'Ajanlar', 'MCP', 'RPA/Workflow', 'Eğitim', 'Guardrail', 'Görüşler', 'Loglar', 'Dış API'];
   const ROLE_LABEL = { super: 'Süper Admin', admin: 'Admin', dept: 'Departman Yöneticisi', editor: 'İçerik Editörü', user: 'Kullanıcı' };
   const ROLE_CLS = { super: 'super', admin: 'admin', dept: '', editor: '', user: '' };
   let creditReqs = [
@@ -622,28 +694,49 @@
         const cards = [['Rol/Departman varsayılanları', '6 politika tanımlı'], ['Bekleyen ek kredi talepleri', `<b style="color:var(--accent)">${creditReqs.length} talep</b> onay bekliyor`], ['Tüketim anomali uyarısı', '1 kullanıcıda ani artış']];
         const rows = creditReqs.length ? creditReqs.map((r, idx) => `<tr><td class="cell-strong">${r.name}</td><td>${r.dept}</td><td class="tnum">${r.credit}</td><td class="muted">${r.reason}</td><td style="text-align:right;white-space:nowrap"><button class="btn primary sm" data-act="credit-approve" data-i="${idx}">Onayla</button> <button class="btn ghost sm" data-act="credit-reject" data-i="${idx}">Reddet</button></td></tr>`).join('') : '<tr><td colspan="5" style="text-align:center;color:var(--text-3);padding:22px">Bekleyen talep yok 🎉</td></tr>';
         return `<div class="grid g-3">${cards.map(c => `<div class="panel"><h3 style="font-size:14px">${c[0]}</h3><p class="muted" style="margin-top:6px;font-size:13px">${c[1]}</p></div>`).join('')}</div>
-          <div class="panel" style="margin-top:16px"><div class="panel-head"><h3>Bekleyen talepler</h3></div><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Talep eden</th><th>Departman</th><th>Kredi</th><th>Gerekçe</th><th></th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
+          <div class="panel" style="margin-top:16px"><div class="panel-head"><h3>Bekleyen talepler</h3><button class="btn primary sm" data-act="credit-grant">+ Kullanıcıya kredi tanımla</button></div><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Talep eden</th><th>Departman</th><th>Kredi</th><th>Gerekçe</th><th></th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
       }
-      case 3: {
-        const rows = MODELS.map(m => { const pub = modelPub[m.id]; return `<tr><td><b>${m.name}</b></td><td>${m.cost}</td><td>${m.caps.map(c => `<span class="cap-badge">${c}</span>`).join(' ')}</td><td>${pub ? '<span class="chip ok"><span class="dt"></span>Yayında</span>' : '<span class="chip">Pasif</span>'}</td><td style="text-align:right"><button class="btn ${pub ? 'ghost' : 'primary'} sm" data-act="model-toggle" data-id="${m.id}">${pub ? 'Yayından kaldır' : 'Yayınla'}</button></td></tr>`; }).join('');
-        return `<div class="panel"><div class="panel-head"><h3>Model yönetimi</h3></div><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Model</th><th>Kredi katsayısı</th><th>Yetenekler</th><th>Durum</th><th></th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
+      case 3: return adminPane.__mdl();
+      case 4: {
+        const rows = SOLUTIONS.map((s, idx) => `<tr><td><b>${s.icon} ${s.name}</b></td><td class="tnum">${s.cost} kredi</td><td class="mono dim" style="font-size:11px;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${s.endpoint}</td><td>${s.active ? '<span class="chip ok"><span class="dt"></span>Aktif</span>' : '<span class="chip">Pasif</span>'}</td><td style="text-align:right;white-space:nowrap"><button class="btn ${s.active ? 'ghost' : 'primary'} sm" data-act="sol-toggle" data-i="${idx}">${s.active ? 'Pasife al' : 'Aktif et'}</button> <button class="btn outline sm" data-act="sol-edit" data-i="${idx}">Düzenle</button></td></tr>`).join('');
+        return `<div class="panel"><div class="panel-head"><h3>Çözüm yönetimi</h3><button class="btn primary sm" data-act="sol-add">+ Çözüm ekle</button></div><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Çözüm</th><th>Kredi kotası</th><th>Servis adresi (endpoint)</th><th>Durum</th><th></th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
       }
-      case 4: return tbl(['Çözüm', 'Kredi katsayısı', 'Yetki grubu', 'Durum'], SOLUTIONS.map(s => [`<b>${s.name}</b>`, s.cost + ' kredi', 'Tüm çalışanlar', '<span class="chip ok"><span class="dt"></span>Aktif</span>']));
-      case 5: return tbl(['MCP Sunucusu', 'Versiyon', 'Sağlık', 'Sınıf', 'Aktif key', 'Çağrı (24s)'], MCPS.map(m => [`<b class="mono">${m.name}</b>`, m.ver, `<span class="chip ${m.health === 'ok' ? 'ok' : 'warn'}"><span class="dt"></span>${HEALTH[m.health][1]}</span>`, m.cls, Math.floor(Math.random() * 40 + 5), (Math.floor(Math.random() * 900 + 100)).toLocaleString('tr')]));
-      case 6: return `<div class="panel"><div class="panel-head"><h3>Guardrail politikaları</h3><button class="btn outline sm" data-act="gr-add">+ Politika ekle</button></div>${guardrails.map((g, idx) => `<div class="lesson"><div style="flex:1"><b style="font-size:13.5px">${g.name}</b><div class="l-type">${g.scope}</div></div><span class="chip ${g.mode === 'enforced' ? 'red' : 'warn'}">${g.mode}</span><button class="btn ghost sm" data-act="gr-del" data-i="${idx}" style="color:var(--accent)">Kaldır</button></div>`).join('')}</div>`;
-      case 7: return `<div style="margin-bottom:12px" class="login-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>Loglar iki depoda tutulur: kullanıcıya dönük operasyonel depo ve değişmez (append-only) denetim deposu. Her erişim ayrıca loglanır.</div>${tbl(['Zaman', 'Aktör', 'Eylem', 'Hedef', 'IP'], [
+      case 5: {
+        const rows = AGENTS.map((a, idx) => `<tr><td class="cell-strong">${a.name}</td><td>${a.dept}</td><td class="dim" style="font-size:11.5px">${a.tags.map(t => '#' + t).join(' ')}</td><td>${a.status === 'ok' ? '<span class="chip ok"><span class="dt"></span>Aktif</span>' : '<span class="chip warn"><span class="dt"></span>Bakımda</span>'}</td><td style="text-align:right;white-space:nowrap"><button class="btn outline sm" data-act="agent-edit" data-i="${idx}">Düzenle</button> <button class="btn ghost sm" data-act="agent-del" data-i="${idx}" style="color:var(--accent)">Sil</button></td></tr>`).join('');
+        return `<div class="panel"><div class="panel-head"><h3>Copilot ajan yönetimi</h3><button class="btn primary sm" data-act="agent-add">+ Ajan tanımla</button></div><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Ajan</th><th>Departman</th><th>Etiketler</th><th>Durum</th><th></th></tr></thead><tbody>${rows}</tbody></table></div><div class="composer-hint" style="text-align:left;padding:12px 16px 0">Buradaki ajanlar "Copilot Ajanları" sayfasında listelenir; kullanıcı "Kullan" ile ajanı yeni sekmede açar.</div></div>`;
+      }
+      case 6: {
+        const rows = MCPS.map((m, idx) => `<tr><td class="cell-strong mono">${m.name}</td><td>${m.ver}</td><td><span class="chip ${m.health === 'ok' ? 'ok' : 'warn'}"><span class="dt"></span>${HEALTH[m.health][1]}</span></td><td>${m.cls}</td><td class="dim" style="font-size:11px">${m.tools.length} tool</td><td style="text-align:right"><button class="btn ghost sm" data-act="mcp-del" data-i="${idx}" style="color:var(--accent)">Sil</button></td></tr>`).join('');
+        return `<div class="panel"><div class="panel-head"><h3>MCP sunucu yönetimi</h3><button class="btn primary sm" data-act="mcp-add">+ MCP tanımla</button></div><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Sunucu</th><th>Versiyon</th><th>Sağlık</th><th>Sınıf</th><th>Tool</th><th></th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
+      }
+      case 7: {
+        const items = SHOWCASE.filter(s => s.cat === 'RPA/Workflow');
+        const rows = items.map(s => `<tr><td class="cell-strong">${s.title}</td><td>${s.dept}</td><td><span class="chip ${STATUS_CLS[s.status]}"><span class="dt"></span>${s.status}</span></td><td style="text-align:right"><button class="btn ghost sm" data-act="rpa-del" data-t="${s.title}" style="color:var(--accent)">Sil</button></td></tr>`).join('') || '<tr><td colspan="4" style="text-align:center;color:var(--text-3);padding:20px">Henüz içerik yok.</td></tr>';
+        return `<div class="panel"><div class="panel-head"><h3>RPA & Workflow yönetimi</h3><button class="btn primary sm" data-act="rpa-add">+ İçerik ekle</button></div><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Başlık</th><th>Departman</th><th>Durum</th><th></th></tr></thead><tbody>${rows}</tbody></table></div><div class="composer-hint" style="text-align:left;padding:12px 16px 0">Bu içerikler AI Vitrini'nin "RPA/Workflow" sekmesinde sergilenir.</div></div>`;
+      }
+      case 8: {
+        const rows = TRAINING.map((t, idx) => `<tr><td class="cell-strong">${t.icon} ${t.title}</td><td>${t.lessons} ders</td><td class="mono dim" style="font-size:11px;max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${t.link}</td><td style="text-align:right;white-space:nowrap"><button class="btn outline sm" data-act="tr-edit" data-i="${idx}">Düzenle</button> <button class="btn ghost sm" data-act="tr-del" data-i="${idx}" style="color:var(--accent)">Sil</button></td></tr>`).join('');
+        return `<div class="panel"><div class="panel-head"><h3>Eğitim & içerik yönetimi</h3><button class="btn primary sm" data-act="tr-add">+ Eğitim ekle</button></div><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Eğitim</th><th>Ders</th><th>Video / içerik linki</th><th></th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
+      }
+      case 9: return `<div class="panel"><div class="panel-head"><h3>Guardrail politikaları</h3><button class="btn outline sm" data-act="gr-add">+ Politika ekle</button></div>${guardrails.map((g, idx) => `<div class="lesson"><div style="flex:1"><b style="font-size:13.5px">${g.name}</b><div class="l-type">${g.scope}${g.shared ? ' · vitrinde paylaşılıyor' : ''}</div></div><span class="chip ${g.mode === 'enforced' ? 'red' : 'warn'}">${g.mode}</span><button class="btn ghost sm" data-act="gr-del" data-i="${idx}" style="color:var(--accent)">Kaldır</button></div>`).join('')}<div class="composer-hint" style="text-align:left;padding:12px 4px 0">Eklenen politikalar Kütüphaneler › Guardrail sekmesinde kullanıcılarla paylaşılır.</div></div>`;
+      case 10: return `<div class="panel"><div class="panel-head"><h3>Kullanıcı görüşleri (${feedback.length})</h3></div>${feedback.map(f => `<div class="fb-item"><div class="fb-top"><b style="font-size:13px">${f.user} <span class="dim" style="font-weight:400">· ${f.topic}</span></b><span class="fb-stars">${'★'.repeat(f.rating)}${'☆'.repeat(5 - f.rating)}</span></div><p>${f.text}</p><div class="fb-meta">${f.time}</div></div>`).join('')}</div>`;
+      case 11: return `<div style="margin-bottom:12px" class="login-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>Loglar iki depoda tutulur: kullanıcıya dönük operasyonel depo ve değişmez (append-only) denetim deposu. Her erişim ayrıca loglanır.</div>${tbl(['Zaman', 'Aktör', 'Eylem', 'Hedef', 'IP'], [
         ['14:32:07', 'Ertekin Ö.', 'chat.invoke', 'GPT-4o', '10.4.2.11'],
         ['14:30:55', 'Ayşe D.', 'credit.approve', 'Can Yıldız +2000', '10.4.3.8'],
         ['14:28:12', 'sistem', 'guardrail.block', 'PII tespiti · maskelendi', '—'],
         ['14:20:41', 'danisman@…', 'mcp.proxy', 'sharepoint-docs.searchDocs', '188.2.x.x'],
       ])}`;
-      case 8: {
+      case 12: {
         const rows = apiClients.map((c, idx) => `<tr><td class="cell-strong mono" style="font-size:12px">${c.name}</td><td>${c.owner}</td><td><span class="mono" style="font-size:11px">${c.scope}</span></td><td>${c.quota}</td><td style="text-align:right"><button class="btn ghost sm" data-act="api-revoke" data-i="${idx}" style="color:var(--accent)">İptal</button></td></tr>`).join('');
         return `<div class="panel"><div class="panel-head"><h3>Dış API istemcileri</h3><button class="btn primary sm" data-act="api-add">+ İstemci oluştur</button></div><div class="tbl-wrap"><table class="tbl"><thead><tr><th>İstemci</th><th>Sahip</th><th>Scope</th><th>Kota</th><th></th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
       }
     }
     return '';
   }
+  adminPane.__mdl = function () {
+    const rows = MODELS.map(m => { const pub = modelPub[m.id]; return `<tr><td><b>${m.name}</b></td><td>${m.cost}</td><td>${m.caps.map(c => `<span class="cap-badge">${c}</span>`).join(' ')}</td><td>${pub ? '<span class="chip ok"><span class="dt"></span>Yayında</span>' : '<span class="chip">Pasif</span>'}</td><td style="text-align:right"><button class="btn ${pub ? 'ghost' : 'primary'} sm" data-act="model-toggle" data-id="${m.id}">${pub ? 'Yayından kaldır' : 'Yayınla'}</button></td></tr>`; }).join('');
+    return `<div class="panel"><div class="panel-head"><h3>Model yönetimi</h3><button class="btn primary sm" data-act="model-add">+ Model ekle</button></div><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Model</th><th>Kredi katsayısı</th><th>Yetenekler</th><th>Durum</th><th></th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
+  };
   let adminBound = false;
   function initAdminActions() {
     if (adminBound) return; adminBound = true;
@@ -652,13 +745,154 @@
       const act = btn.dataset.act, i = +btn.dataset.i;
       if (act === 'credit-approve') { const r = creditReqs.splice(i, 1)[0]; refreshPane(2); updateAdminBadge(); toast('Talep onaylandı', `${r.name} için ${r.credit} kredi eklendi.`, 'ok'); }
       else if (act === 'credit-reject') { const r = creditReqs.splice(i, 1)[0]; refreshPane(2); updateAdminBadge(); toast('Talep reddedildi', `${r.name} talebi reddedildi.`, 'info'); }
-      else if (act === 'model-toggle') { const id = btn.dataset.id; modelPub[id] = !modelPub[id]; refreshPane(3); toast('Model güncellendi', modelPub[id] ? 'Model yayına alındı.' : 'Model yayından kaldırıldı.', 'info'); }
+      else if (act === 'credit-grant') { creditGrantModal(); }
+      else if (act === 'model-toggle') { const id = btn.dataset.id; modelPub[id] = !modelPub[id]; refreshPane(3); renderModelMenu(); toast('Model güncellendi', modelPub[id] ? 'Model yayına alındı.' : 'Model yayından kaldırıldı.', 'info'); }
+      else if (act === 'model-add') { modelModal(); }
+      else if (act === 'sol-toggle') { SOLUTIONS[i].active = !SOLUTIONS[i].active; refreshPane(4); renderSolutions(); toast('Çözüm güncellendi', SOLUTIONS[i].active ? 'Çözüm aktif edildi.' : 'Çözüm pasife alındı.', 'info'); }
+      else if (act === 'sol-edit') { solutionModal(i); }
+      else if (act === 'sol-add') { solutionModal(-1); }
+      else if (act === 'agent-add') { agentModal(-1); }
+      else if (act === 'agent-edit') { agentModal(i); }
+      else if (act === 'agent-del') { const a = AGENTS.splice(i, 1)[0]; refreshPane(5); renderAgents(); toast('Ajan silindi', a.name); }
+      else if (act === 'mcp-add') { mcpModal(); }
+      else if (act === 'mcp-del') { const m = MCPS.splice(i, 1)[0]; refreshPane(6); renderMcp(); toast('MCP silindi', m.name); }
+      else if (act === 'rpa-add') { rpaModal(); }
+      else if (act === 'rpa-del') { const t = btn.dataset.t; const idx = SHOWCASE.findIndex(s => s.title === t); if (idx > -1) SHOWCASE.splice(idx, 1); refreshPane(7); renderShowcase(); toast('İçerik silindi', t); }
+      else if (act === 'tr-add') { trainingAdminModal(-1); }
+      else if (act === 'tr-edit') { trainingAdminModal(i); }
+      else if (act === 'tr-del') { const t = TRAINING.splice(i, 1)[0]; refreshPane(8); renderTraining(); toast('Eğitim silindi', t.title); }
       else if (act === 'gr-add') { guardrailModal(); }
-      else if (act === 'gr-del') { guardrails.splice(i, 1); refreshPane(6); toast('Politika kaldırıldı', ''); }
+      else if (act === 'gr-del') { guardrails.splice(i, 1); refreshPane(9); toast('Politika kaldırıldı', ''); }
       else if (act === 'api-add') { apiClientModal(); }
-      else if (act === 'api-revoke') { apiClients.splice(i, 1); refreshPane(8); toast('İstemci iptal edildi', ''); }
+      else if (act === 'api-revoke') { apiClients.splice(i, 1); refreshPane(12); toast('İstemci iptal edildi', ''); }
       else if (act === 'user-role') { userRoleModal(i); }
-      else if (act === 'user-add') { toast('Statik kullanıcı', 'Kullanıcı oluşturma formu (demo).', 'info'); }
+      else if (act === 'user-add') { userAddModal(); }
+    });
+  }
+  const slug = s => (s || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'x' + Date.now();
+  function bindModal(saveId, cancelIds, onSave) {
+    $('#modal-inner .x').addEventListener('click', closeModal);
+    cancelIds.forEach(id => $('#' + id) && $('#' + id).addEventListener('click', closeModal));
+    $('#' + saveId).addEventListener('click', onSave);
+  }
+  function modelModal() {
+    openModal(`<div class="modal-head"><h3>Yeni model ekle</h3><button class="x">✕</button></div>
+      <div class="modal-body">
+        <div class="field"><label>Model adı</label><input class="input" id="m-name" placeholder="Örn. GPT-4.1"></div>
+        <div class="grid g-2" style="gap:12px"><div class="field"><label>Kısa etiket</label><input class="input" id="m-logo" placeholder="G4" maxlength="3"></div><div class="field"><label>Renk</label><input class="input" id="m-color" type="color" value="#e5352b" style="height:42px;padding:4px"></div></div>
+        <div class="field"><label>Kredi katsayısı</label><input class="input" id="m-cost" placeholder="4 kredi / 1K token"></div>
+        <div class="field"><label>Bağlam</label><input class="input" id="m-ctx" placeholder="128K bağlam"></div>
+        <div class="field"><label>Yetenekler (virgülle)</label><input class="input" id="m-caps" placeholder="Görsel, Dosya, Uzun bağlam"></div>
+      </div><div class="modal-foot"><button class="btn outline" id="m-cancel">Vazgeç</button><button class="btn primary" id="m-save">Ekle</button></div>`);
+    bindModal('m-save', ['m-cancel'], () => {
+      const name = $('#m-name').value.trim() || 'Yeni Model'; const id = slug(name);
+      MODELS.push({ id, name, logo: $('#m-logo').value.trim() || name.slice(0, 2).toUpperCase(), color: $('#m-color').value, cost: $('#m-cost').value.trim() || '3 kredi / 1K token', ctx: $('#m-ctx').value.trim() || '32K bağlam', caps: ($('#m-caps').value.trim() || 'Genel').split(',').map(x => x.trim()).filter(Boolean) });
+      modelPub[id] = true; refreshPane(3); renderModelMenu(); closeModal(); toast('Model eklendi', name + ' yayına alındı.', 'ok');
+    });
+  }
+  function solutionModal(idx) {
+    const s = idx > -1 ? SOLUTIONS[idx] : { name: '', cost: 8, endpoint: 'https://ai-gw.taihub.toyota.com.tr/solutions/', icon: '🧩', desc: '', fields: [{ t: 'textarea', label: 'Girdi', ph: '' }], key: '' };
+    openModal(`<div class="modal-head"><h3>${idx > -1 ? 'Çözümü düzenle' : 'Yeni çözüm ekle'}</h3><button class="x">✕</button></div>
+      <div class="modal-body">
+        <div class="field"><label>Çözüm adı</label><input class="input" id="s-name" value="${s.name}" placeholder="Örn. Sözleşme Özetleyici"></div>
+        <div class="field"><label>Kredi kotası</label><input class="input" id="s-cost" type="number" value="${s.cost}"></div>
+        <div class="field"><label>Servis adresi (endpoint)</label><input class="input mono" id="s-ep" value="${s.endpoint}" placeholder="https://ai-gw.taihub.toyota.com.tr/solutions/..."></div>
+        ${idx > -1 ? '' : '<div class="field"><label>Kısa açıklama</label><input class="input" id="s-desc" placeholder="Ne yapar?"></div>'}
+      </div><div class="modal-foot"><button class="btn outline" id="s-cancel">Vazgeç</button><button class="btn primary" id="s-save">${idx > -1 ? 'Kaydet' : 'Ekle'}</button></div>`);
+    bindModal('s-save', ['s-cancel'], () => {
+      const name = $('#s-name').value.trim() || 'Yeni Çözüm', cost = +$('#s-cost').value || 8, ep = $('#s-ep').value.trim();
+      if (idx > -1) { s.name = name; s.cost = cost; s.endpoint = ep; }
+      else SOLUTIONS.push({ key: slug(name), icon: '🧩', name, desc: ($('#s-desc') && $('#s-desc').value.trim()) || 'Yeni operasyonel çözüm.', cost, active: true, endpoint: ep || 'https://ai-gw.taihub.toyota.com.tr/solutions/' + slug(name), fields: [{ t: 'textarea', label: 'Girdi', ph: 'İçeriği yaz…' }] });
+      refreshPane(4); renderSolutions(); closeModal(); toast(idx > -1 ? 'Çözüm güncellendi' : 'Çözüm eklendi', name, 'ok');
+    });
+  }
+  function agentModal(idx) {
+    const a = idx > -1 ? AGENTS[idx] : { name: '', dept: '', desc: '', tags: [], url: '', status: 'ok', uses: 0 };
+    openModal(`<div class="modal-head"><h3>${idx > -1 ? 'Ajanı düzenle' : 'Yeni ajan tanımla'}</h3><button class="x">✕</button></div>
+      <div class="modal-body">
+        <div class="field"><label>Ajan adı</label><input class="input" id="a-name" value="${a.name}" placeholder="Örn. Finans Asistanı"></div>
+        <div class="field"><label>Departman</label><input class="input" id="a-dept" value="${a.dept}" placeholder="Örn. Finans"></div>
+        <div class="field"><label>Açıklama</label><textarea class="textarea" id="a-desc" placeholder="Ne yapar?">${a.desc}</textarea></div>
+        <div class="field"><label>Etiketler (virgülle)</label><input class="input" id="a-tags" value="${a.tags.join(', ')}" placeholder="bütçe, rapor"></div>
+        <div class="field"><label>Ajan adresi (URL — yeni sekmede açılır)</label><input class="input mono" id="a-url" value="${a.url}" placeholder="https://ajanlar.taihub.toyota.com.tr/..."></div>
+        <div class="field"><label>Durum</label><select class="select" id="a-status"><option value="ok" ${a.status === 'ok' ? 'selected' : ''}>Aktif</option><option value="warn" ${a.status !== 'ok' ? 'selected' : ''}>Bakımda</option></select></div>
+      </div><div class="modal-foot"><button class="btn outline" id="a-cancel">Vazgeç</button><button class="btn primary" id="a-save">${idx > -1 ? 'Kaydet' : 'Tanımla'}</button></div>`);
+    bindModal('a-save', ['a-cancel'], () => {
+      const name = $('#a-name').value.trim() || 'Yeni Ajan';
+      const data = { name, dept: $('#a-dept').value.trim() || 'Genel', desc: $('#a-desc').value.trim() || 'Kurumsal ajan.', tags: ($('#a-tags').value.trim() || 'genel').split(',').map(x => x.trim()).filter(Boolean), url: $('#a-url').value.trim() || 'https://ajanlar.taihub.toyota.com.tr/' + slug(name), status: $('#a-status').value };
+      if (idx > -1) Object.assign(AGENTS[idx], data); else AGENTS.push(Object.assign({ uses: 0 }, data));
+      refreshPane(5); renderAgents(); closeModal(); toast(idx > -1 ? 'Ajan güncellendi' : 'Ajan tanımlandı', name, 'ok');
+    });
+  }
+  function mcpModal() {
+    openModal(`<div class="modal-head"><h3>Yeni MCP sunucusu</h3><button class="x">✕</button></div>
+      <div class="modal-body">
+        <div class="field"><label>Sunucu adı</label><input class="input mono" id="mc-name" placeholder="örn. erp-stok"></div>
+        <div class="field"><label>Açıklama</label><input class="input" id="mc-desc" placeholder="Ne sağlar?"></div>
+        <div class="grid g-2" style="gap:12px"><div class="field"><label>Versiyon</label><input class="input" id="mc-ver" value="v0.1.0"></div><div class="field"><label>Veri sınıfı</label><select class="select" id="mc-cls"><option>Genel</option><option>İç</option><option>Gizli</option></select></div></div>
+        <div class="field"><label>Tool'lar (virgülle)</label><input class="input mono" id="mc-tools" placeholder="getItem, listItems"></div>
+      </div><div class="modal-foot"><button class="btn outline" id="mc-cancel">Vazgeç</button><button class="btn primary" id="mc-save">Tanımla</button></div>`);
+    bindModal('mc-save', ['mc-cancel'], () => {
+      const name = $('#mc-name').value.trim() || 'yeni-mcp';
+      MCPS.push({ name, desc: $('#mc-desc').value.trim() || 'Kurumsal MCP sunucusu.', ver: $('#mc-ver').value.trim() || 'v0.1.0', health: 'ok', cls: $('#mc-cls').value, owner: 'BT', tools: ($('#mc-tools').value.trim() || 'ping').split(',').map(x => x.trim()).filter(Boolean) });
+      refreshPane(6); renderMcp(); closeModal(); toast('MCP tanımlandı', name, 'ok');
+    });
+  }
+  function rpaModal() {
+    openModal(`<div class="modal-head"><h3>Yeni RPA / Workflow içeriği</h3><button class="x">✕</button></div>
+      <div class="modal-body">
+        <div class="field"><label>Başlık</label><input class="input" id="r-title" placeholder="Örn. Sipariş Onay Robotu"></div>
+        <div class="field"><label>Departman</label><input class="input" id="r-dept" placeholder="Örn. Satış"></div>
+        <div class="field"><label>Açıklama</label><textarea class="textarea" id="r-desc" placeholder="Bu akış ne yapar?"></textarea></div>
+        <div class="grid g-2" style="gap:12px"><div class="field"><label>Durum</label><select class="select" id="r-status"><option>Canlı</option><option>Pilot</option><option>Geliştirmede</option><option>Fikir</option></select></div><div class="field"><label>Metrik</label><input class="input" id="r-metric" placeholder="Örn. 200 akış/ay"></div></div>
+      </div><div class="modal-foot"><button class="btn outline" id="r-cancel">Vazgeç</button><button class="btn primary" id="r-save">Ekle</button></div>`);
+    bindModal('r-save', ['r-cancel'], () => {
+      const title = $('#r-title').value.trim() || 'Yeni Akış';
+      SHOWCASE.push({ title, cat: 'RPA/Workflow', dept: $('#r-dept').value.trim() || 'Genel', status: $('#r-status').value, desc: $('#r-desc').value.trim() || 'RPA / workflow otomasyonu.', metric: $('#r-metric').value.trim() || '—', link: 'n8n', owner: 'RPA Ekibi', story: $('#r-desc').value.trim() || 'RPA / workflow otomasyonu.', metrics: [] });
+      refreshPane(7); renderShowcase(); closeModal(); toast('İçerik eklendi', title + ' vitrine eklendi.', 'ok');
+    });
+  }
+  function trainingAdminModal(idx) {
+    const t = idx > -1 ? TRAINING[idx] : { icon: '🎓', bg: '#e9f0fe', title: '', lessons: 4, pct: 0, link: '', content: '' };
+    openModal(`<div class="modal-head"><h3>${idx > -1 ? 'Eğitimi düzenle' : 'Yeni eğitim ekle'}</h3><button class="x">✕</button></div>
+      <div class="modal-body">
+        <div class="grid g-2" style="gap:12px"><div class="field"><label>Simge</label><input class="input" id="t-icon" value="${t.icon}" maxlength="2"></div><div class="field"><label>Ders sayısı</label><input class="input" id="t-lessons" type="number" value="${t.lessons}"></div></div>
+        <div class="field"><label>Başlık</label><input class="input" id="t-title" value="${t.title}" placeholder="Örn. Güvenli AI Kullanımı"></div>
+        <div class="field"><label>Video / içerik linki</label><input class="input mono" id="t-link" value="${t.link || ''}" placeholder="https://ogren.taihub.toyota.com.tr/..."></div>
+        <div class="field"><label>İçerik açıklaması</label><textarea class="textarea" id="t-content" placeholder="Bu eğitim neyi kapsar?">${t.content || ''}</textarea></div>
+      </div><div class="modal-foot"><button class="btn outline" id="t-cancel">Vazgeç</button><button class="btn primary" id="t-save">${idx > -1 ? 'Kaydet' : 'Ekle'}</button></div>`);
+    bindModal('t-save', ['t-cancel'], () => {
+      const title = $('#t-title').value.trim() || 'Yeni Eğitim';
+      const data = { icon: $('#t-icon').value.trim() || '🎓', title, lessons: +$('#t-lessons').value || 4, link: $('#t-link').value.trim() || 'https://ogren.taihub.toyota.com.tr/' + slug(title), content: $('#t-content').value.trim() || 'Bu eğitim kısa derslerden oluşur.' };
+      if (idx > -1) Object.assign(TRAINING[idx], data); else TRAINING.push(Object.assign({ bg: '#e9f0fe', pct: 0 }, data));
+      refreshPane(8); renderTraining(); closeModal(); toast(idx > -1 ? 'Eğitim güncellendi' : 'Eğitim eklendi', title, 'ok');
+    });
+  }
+  function userAddModal() {
+    const roles = ['user', 'editor', 'dept', 'admin', 'super'];
+    openModal(`<div class="modal-head"><h3>Statik kullanıcı tanımla</h3><button class="x">✕</button></div>
+      <div class="modal-body">
+        <div class="field"><label>Ad / e-posta</label><input class="input" id="u-name" placeholder="ad.soyad@partner.com"></div>
+        <div class="field"><label>Departman</label><input class="input" id="u-dept" placeholder="Örn. Dış Danışman"></div>
+        <div class="field"><label>Rol</label><select class="select" id="u-role">${roles.map(r => `<option value="${r}">${ROLE_LABEL[r]}</option>`).join('')}</select></div>
+        <div class="login-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>Statik hesaplar için ilk girişte şifre değişimi ve 2FA önerilir.</div>
+      </div><div class="modal-foot"><button class="btn outline" id="u-cancel">Vazgeç</button><button class="btn primary" id="u-save">Oluştur</button></div>`);
+    bindModal('u-save', ['u-cancel'], () => {
+      const name = $('#u-name').value.trim() || 'yeni.kullanici@partner.com';
+      adminUsers.push({ name, type: 'Statik', dept: $('#u-dept').value.trim() || '—', role: $('#u-role').value });
+      refreshPane(1); closeModal(); toast('Kullanıcı oluşturuldu', name, 'ok');
+    });
+  }
+  function creditGrantModal() {
+    openModal(`<div class="modal-head"><h3>Kullanıcıya kredi tanımla</h3><button class="x">✕</button></div>
+      <div class="modal-body">
+        <div class="field"><label>Kullanıcı</label><select class="select" id="cg-user">${adminUsers.map(u => `<option>${u.name}</option>`).join('')}</select></div>
+        <div class="field"><label>Kredi miktarı</label><input class="input" id="cg-amount" type="number" value="1000"></div>
+        <div class="field"><label>Tür</label><select class="select" id="cg-type"><option>Tek seferlik bonus</option><option>Günlük limite ekle</option><option>Süreli ek (30 gün)</option></select></div>
+      </div><div class="modal-foot"><button class="btn outline" id="cg-cancel">Vazgeç</button><button class="btn primary" id="cg-save">Tanımla</button></div>`);
+    bindModal('cg-save', ['cg-cancel'], () => {
+      const u = $('#cg-user').value, amt = $('#cg-amount').value, type = $('#cg-type').value;
+      closeModal(); toast('Kredi tanımlandı', `${u} → +${amt} kredi (${type}).`, 'ok');
     });
   }
   function guardrailModal() {
@@ -671,7 +905,14 @@
       <div class="modal-foot"><button class="btn outline" id="gr-cancel">Vazgeç</button><button class="btn primary" id="gr-save">Ekle</button></div>`);
     $('#modal-inner .x').addEventListener('click', closeModal);
     $('#gr-cancel').addEventListener('click', closeModal);
-    $('#gr-save').addEventListener('click', () => { const name = $('#gr-name').value.trim() || 'Yeni politika'; guardrails.unshift({ name, scope: $('#gr-scope').value.trim() || 'Tüm modeller', mode: $('#gr-mode').value }); refreshPane(6); closeModal(); toast('Politika eklendi', name, 'ok'); });
+    $('#gr-save').addEventListener('click', () => {
+      const name = $('#gr-name').value.trim() || 'Yeni politika'; const mode = $('#gr-mode').value; const scope = $('#gr-scope').value.trim() || 'Tüm modeller';
+      guardrails.unshift({ name, scope, mode, shared: true });
+      // Kütüphaneler › Guardrail sekmesinde kullanıcılarla paylaş
+      LIBS.guardrail.items.unshift({ title: name, tags: ['paylaşılan'], copies: 0, enforced: mode === 'enforced', body: scope });
+      refreshPane(9); if (typeof renderLibraries === 'function') renderLibraries();
+      closeModal(); toast('Politika eklendi', name + ' — kütüphanede paylaşıldı.', 'ok');
+    });
   }
   function apiClientModal() {
     const secret = 'tt_cli_' + Math.random().toString(36).slice(2, 12) + Math.random().toString(36).slice(2, 10);
@@ -680,7 +921,7 @@
         <div class="field"><label>İstemci adı</label><input class="input" id="cl-name" placeholder="Örn. mobil-uygulama"></div>
         <div class="field"><label>Sahip</label><input class="input" id="cl-owner" placeholder="Örn. BT / Mobil"></div>
         <div class="field"><label>Scope</label><input class="input" id="cl-scope" placeholder="chat:invoke, solutions:cv-analysis"></div>
-        <div class="field"><label>Kota</label><input class="input" id="cl-quota" value="1K istek/gün"></div>
+        <div class="field"><label>Kota (istek sayısı sınırı)</label><div style="display:flex;gap:8px"><input class="input" id="cl-qnum" type="number" value="1000" style="flex:1"><select class="select" id="cl-qper" style="flex:1"><option value="dakika">istek / dakika</option><option value="saat">istek / saat</option><option value="gün" selected>istek / gün</option></select></div></div>
         <div id="cl-created" style="display:none"><label style="font-size:12.5px;font-weight:600;color:var(--text-2)">İstemci secret'ı (yalnızca bir kez gösterilir)</label><div class="key-box" style="margin-top:6px"><span>${secret}</span><button class="btn outline sm" id="cl-copy">Kopyala</button></div></div>
       </div>
       <div class="modal-foot" id="cl-foot"><button class="btn outline" id="cl-cancel">Vazgeç</button><button class="btn primary" id="cl-create">Oluştur</button></div>`);
@@ -688,11 +929,12 @@
     $('#cl-cancel').addEventListener('click', closeModal);
     $('#cl-create').addEventListener('click', () => {
       const name = $('#cl-name').value.trim() || 'yeni-istemci';
-      apiClients.unshift({ name, owner: $('#cl-owner').value.trim() || '—', scope: $('#cl-scope').value.trim() || 'chat:invoke', quota: $('#cl-quota').value.trim() || '1K istek/gün' });
+      const quota = (+$('#cl-qnum').value || 1000).toLocaleString('tr') + ' istek/' + $('#cl-qper').value;
+      apiClients.unshift({ name, owner: $('#cl-owner').value.trim() || '—', scope: $('#cl-scope').value.trim() || 'chat:invoke', quota });
       $('#cl-created').style.display = 'block';
       $('#cl-foot').innerHTML = '<button class="btn primary" id="cl-done">Bitti</button>';
       $('#cl-done').addEventListener('click', closeModal);
-      refreshPane(8); toast('İstemci oluşturuldu', 'Secret yalnızca bir kez gösterilir.', 'ok');
+      refreshPane(12); toast('İstemci oluşturuldu', 'Secret yalnızca bir kez gösterilir.', 'ok');
     });
     document.addEventListener('click', e => { if (e.target.id === 'cl-copy') toast('Kopyalandı', 'Secret panoya kopyalandı.', 'ok'); });
   }
@@ -723,9 +965,13 @@
   let curModel = MODELS[0];
   function renderChat() {
     $('#chat-list').innerHTML = Object.entries(CHATS).map(([g, arr]) => `<div class="cs-group">${g}</div>${arr.map((c, i) => `<div class="cs-item ${g === 'Bugün' && i === 0 ? 'active' : ''}">${c}</div>`).join('')}`).join('');
-    $('#model-menu').innerHTML = MODELS.map(m => `<div class="model-opt" data-id="${m.id}"><span class="m-logo" style="background:${m.color};width:26px;height:26px;border-radius:6px">${m.logo}</span><div class="mo-meta"><b>${m.name}</b><span>${m.ctx} · ${m.caps.join(', ')}</span></div><span class="mo-cost">${m.cost}</span></div>`).join('');
+    renderModelMenu();
     $('#palette').innerHTML = PROMPTS.map(p => `<div class="p-item"><b>${p.t}</b><span>${p.d}</span></div>`).join('');
     resetChat();
+  }
+  function renderModelMenu() {
+    if (!$('#model-menu')) return;
+    $('#model-menu').innerHTML = MODELS.filter(m => modelPub[m.id] !== false).map(m => `<div class="model-opt" data-id="${m.id}"><span class="m-logo" style="background:${m.color};width:26px;height:26px;border-radius:6px">${m.logo}</span><div class="mo-meta"><b>${m.name}</b><span>${m.ctx} · ${m.caps.join(', ')}</span></div><span class="mo-cost">${m.cost}</span></div>`).join('');
   }
   const CHAT_SUGGESTIONS = ['Bu metni özetle', 'Bir e-posta taslağı yaz', 'İngilizceye çevir', 'Fikir üret', 'Bir tabloyu açıkla'];
   function resetChat() {
@@ -875,10 +1121,65 @@
   }
   $('#onboard-dismiss') && $('#onboard-dismiss').addEventListener('click', () => { $('#onboard').style.display = 'none'; });
 
+  /* ---------------- AZURE ÇÖZÜMLERİ ---------------- */
+  let curAzure = null;
+  function azureMsg(role, html) {
+    const m = el('div', 'msg ' + role, `<div class="m-av" style="${role === 'ai' ? 'background:#0078d4;box-shadow:none' : ''}">${role === 'ai' ? 'AZ' : 'EÖ'}</div><div class="m-body"><div class="m-role">${role === 'ai' ? (curAzure ? curAzure.name : 'Azure AI') : 'Sen'}</div><div class="m-text">${html}</div></div>`);
+    $('#azure-chat').appendChild(m); $('#azure-chat').parentElement.scrollTop = 1e9; return m;
+  }
+  function openAzure(key) {
+    curAzure = AZURE.find(a => a.key === key);
+    $('#azure-grid').style.display = 'none'; $('#azure-detail').style.display = 'block';
+    $('#azure-ico').textContent = curAzure.icon; $('#azure-title').textContent = curAzure.name; $('#azure-desc').textContent = curAzure.desc;
+    $('#azure-chat').innerHTML = ''; azureMsg('ai', `<p>${curAzure.name} hazır. ${curAzure.hint}</p><p>Bir soru yazabilir ya da işlenecek içeriği paylaşabilirsin.</p>`);
+    $('#content').scrollTop = 0;
+  }
+  function renderAzure() {
+    $('#azure-grid').innerHTML = AZURE.map(a => `<div class="acard az-card" data-key="${a.key}"><div class="ac-top"><div class="az-ico">${a.icon}</div><span class="chip info"><span class="dt"></span>Hazır</span></div><div class="ac-body"><h4>${a.name}</h4><div class="ac-desc">${a.desc}</div></div><div class="ac-foot"><span class="dim" style="font-size:11.5px">Azure AI</span><button class="btn primary sm">Aç ›</button></div></div>`).join('');
+    $$('.az-card').forEach(c => c.addEventListener('click', () => openAzure(c.dataset.key)));
+    $('#azure-back').addEventListener('click', () => { $('#azure-detail').style.display = 'none'; $('#azure-grid').style.display = 'grid'; $('#content').scrollTop = 0; });
+    const send = () => {
+      const inp = $('#azure-input'); const t = inp.value.trim(); if (!t) return;
+      azureMsg('user', t.replace(/</g, '&lt;')); inp.value = ''; inp.style.height = 'auto';
+      const m = azureMsg('ai', '<div class="typing"><i></i><i></i><i></i></div>');
+      setTimeout(() => { m.querySelector('.m-text').innerHTML = `<p>Bu, ${curAzure ? curAzure.name : 'Azure AI'} demo yanıtıdır. Gerçek kullanımda isteğin bu servis üzerinden işlenir; sonuç kredi düşümü ve loglama ile birlikte döner.</p><p style="color:var(--text-3);font-size:12.5px">${curAzure ? curAzure.hint : ''}</p>`; $('#azure-chat').parentElement.scrollTop = 1e9; }, 850);
+    };
+    $('#azure-send').addEventListener('click', send);
+    $('#azure-input').addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } });
+    $('#azure-input').addEventListener('input', () => { const i = $('#azure-input'); i.style.height = 'auto'; i.style.height = Math.min(120, i.scrollHeight) + 'px'; });
+  }
+
+  /* ---------------- n8n ---------------- */
+  function initN8n() {
+    const url = 'https://n8n.taihub.toyota.com.tr';
+    $('#n8n-open') && $('#n8n-open').addEventListener('click', () => window.open(url, '_blank'));
+    $('#n8n-open2') && $('#n8n-open2').addEventListener('click', () => window.open(url, '_blank'));
+  }
+
+  /* ---------------- GÖRÜŞ & ÖNERİ ---------------- */
+  function renderFeedbackList() {
+    $('#fb-list').innerHTML = feedback.map(f => `<div class="fb-item"><div class="fb-top"><b style="font-size:13px">${f.user}</b><span class="fb-stars">${'★'.repeat(f.rating)}${'☆'.repeat(5 - f.rating)}</span></div><p>${f.text}</p><div class="fb-meta">${f.topic} · ${f.time}</div></div>`).join('');
+  }
+  function renderFeedback() {
+    let rating = 5;
+    const rr = $('#fb-rating');
+    const drawStars = () => rr.innerHTML = [1, 2, 3, 4, 5].map(n => `<button class="star ${n <= rating ? 'on' : ''}" data-n="${n}">★</button>`).join('');
+    drawStars();
+    rr.addEventListener('click', e => { const b = e.target.closest('.star'); if (!b) return; rating = +b.dataset.n; drawStars(); });
+    renderFeedbackList();
+    $('#fb-send').addEventListener('click', () => {
+      const text = $('#fb-text').value.trim(); if (!text) { toast('Görüş boş', 'Lütfen birkaç kelime yaz.', 'info'); return; }
+      feedback.unshift({ topic: $('#fb-topic').value, rating, text, user: 'Sen', time: 'az önce' });
+      $('#fb-text').value = ''; renderFeedbackList();
+      const p = $('#ap-10'); if (p) p.innerHTML = adminPane(10);
+      toast('Teşekkürler! 🙏', 'Görüşün paylaşıldı ve yöneticilere iletildi.', 'ok');
+    });
+  }
+
   /* ---------------- INIT ---------------- */
   renderDashboard(); renderShowcase(); renderAgents(); renderLibraries(); renderSolutions();
   renderMcp(); renderTraining(); renderCreditsStatic(); renderHistory(); renderAdmin();
-  renderChat(); initChat();
+  renderChat(); initChat(); renderAzure(); initN8n(); renderFeedback();
   initStars(); initTooltips(); initHelp(); initTour(); renderOnboard();
   redrawRings();
   window.addEventListener('resize', () => { redrawRings(); if ($('#v-credits').classList.contains('active')) drawCredits(); if ($('#v-admin').classList.contains('active')) drawAdminCharts(); });
