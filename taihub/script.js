@@ -187,7 +187,7 @@
   $('#modal').addEventListener('click', e => { if (e.target.id === 'modal') closeModal(); });
 
   /* ---------------- LOGIN ---------------- */
-  function enterApp() { $('#login').classList.add('hidden'); $('#app').classList.remove('hidden'); }
+  function enterApp() { $('#login').classList.add('hidden'); $('#app').classList.remove('hidden'); maybeStartTour(); }
   $('#sso-btn').addEventListener('click', enterApp);
   $('#static-form').addEventListener('submit', e => { e.preventDefault(); enterApp(); });
   $('#static-toggle').addEventListener('click', () => $('#static-form').classList.toggle('open'));
@@ -200,8 +200,26 @@
     $('#page-title').textContent = TITLES[view] || '';
     $('#content').scrollTop = 0;
     $('#sidebar').classList.remove('open');
+    runProgress();
+    revealView('v-' + view);
     if (view === 'credits') drawCredits();
     if (view === 'admin') drawAdminCharts();
+  }
+  function runProgress() {
+    const p = $('#nav-progress'); if (!p) return;
+    p.classList.remove('run'); void p.offsetWidth; p.classList.add('run');
+  }
+  // active görünümün kartlarını sırayla belirt (yumuşak geçiş)
+  function revealView(id) {
+    if (document.body.classList.contains('reduce-motion')) return;
+    const v = document.getElementById(id); if (!v || v.classList.contains('full')) return;
+    const items = [...v.querySelectorAll('.stat-card, .acard, .card, .panel, .path-card')];
+    items.forEach((it, i) => {
+      it.classList.remove('reveal-item'); it.style.animationDelay = '';
+      void it.offsetWidth;
+      it.style.animationDelay = Math.min(i, 9) * 0.045 + 's';
+      it.classList.add('reveal-item');
+    });
   }
   $$('.nav-item').forEach(n => n.addEventListener('click', () => goto(n.dataset.view)));
   document.addEventListener('click', e => { const g = e.target.closest('[data-goto]'); if (g) goto(g.dataset.goto); });
@@ -544,9 +562,14 @@
     $('#palette').innerHTML = PROMPTS.map(p => `<div class="p-item"><b>${p.t}</b><span>${p.d}</span></div>`).join('');
     resetChat();
   }
+  const CHAT_SUGGESTIONS = ['Bu metni özetle', 'Bir e-posta taslağı yaz', 'İngilizceye çevir', 'Fikir üret', 'Bir tabloyu açıkla'];
   function resetChat() {
     $('#chat-inner').innerHTML = '';
-    addMsg('ai', `<p>Merhaba! Ben T-AI Hub sohbet asistanıyım. Kurumsal olarak loglanan, kredi ile ölçülen bir ortamdasın.</p><p>Bir prompt kütüphanesi şablonu için <code>/</code> yazabilir veya doğrudan sorunu yazabilirsin.</p>`, curModel, 0, 0);
+    addMsg('ai', `<p>Merhaba! Ben T-AI Hub sohbet asistanıyım. Yapay zekaya buradan mesajlaşma gibi soru sorabilirsin — konuşmaların kurumsal olarak korunur.</p><p>Ne yazacağından emin değilsen aşağıdaki hazır önerilerden birine tıkla:</p>`, curModel, 0, 0);
+    const sg = el('div', 'suggest');
+    sg.innerHTML = CHAT_SUGGESTIONS.map(s => `<button class="sg">${s}</button>`).join('');
+    sg.addEventListener('click', e => { const b = e.target.closest('.sg'); if (!b) return; const inp = $('#composer-input'); inp.value = b.textContent + ': '; inp.focus(); inp.dispatchEvent(new Event('input')); });
+    $('#chat-inner').appendChild(sg);
   }
   function addMsg(role, html, model, tokens, credit) {
     const meta = role === 'ai' && tokens ? `<div class="m-meta"><span class="mm"><span class="m-logo" style="width:14px;height:14px;border-radius:3px;font-size:8px;background:${model.color}">${model.logo}</span>${model.name}</span><span class="mm">◍ ${credit} kredi</span><span class="mm">${tokens} token</span></div><div class="m-actions"><button>Kopyala</button><button>Yeniden üret</button><button>👍</button><button>👎</button></div>` : '';
@@ -595,11 +618,103 @@
     $('#chat-list').addEventListener('click', e => { const it = e.target.closest('.cs-item'); if (!it) return; $$('.cs-item').forEach(x => x.classList.remove('active')); it.classList.add('active'); });
   }
 
+  /* ---------------- TOOLTIP (jargon ipuçları) ---------------- */
+  function initTooltips() {
+    const tip = $('#tooltip');
+    function show(elm) {
+      if (!$('#tour').hidden) return;
+      const t = elm.getAttribute('data-help'); if (!t) return;
+      tip.textContent = t; tip.hidden = false;
+      const r = elm.getBoundingClientRect();
+      let left = r.left, top = r.bottom + 8;
+      if (left + 264 > innerWidth - 12) left = innerWidth - 276;
+      if (left < 12) left = 12;
+      if (top + tip.offsetHeight > innerHeight - 12) top = r.top - tip.offsetHeight - 8;
+      tip.style.left = left + 'px'; tip.style.top = top + 'px';
+    }
+    const hide = () => tip.hidden = true;
+    document.addEventListener('mouseover', e => { const el = e.target.closest('[data-help]'); if (el) show(el); });
+    document.addEventListener('mouseout', e => { if (e.target.closest('[data-help]')) hide(); });
+    document.addEventListener('focusin', e => { const el = e.target.closest('[data-help]'); if (el) show(el); });
+    document.addEventListener('focusout', hide);
+    window.addEventListener('scroll', hide, true);
+  }
+
+  /* ---------------- HELP POPOVER ---------------- */
+  function initHelp() {
+    const pop = $('#help-pop');
+    $('#help-btn').addEventListener('click', e => { e.stopPropagation(); $('#notif-pop').classList.remove('open'); pop.classList.toggle('open'); });
+    document.addEventListener('click', e => { if (!e.target.closest('#help-pop') && !e.target.closest('#help-btn')) pop.classList.remove('open'); });
+    $('#tour-start').addEventListener('click', () => { pop.classList.remove('open'); startTour(); });
+    $('#text-size').addEventListener('click', e => {
+      const b = e.target.closest('.seg-btn'); if (!b) return;
+      $$('#text-size .seg-btn').forEach(x => x.classList.remove('active')); b.classList.add('active');
+      document.documentElement.setAttribute('data-text', b.dataset.ts);
+      setTimeout(() => { redrawRings(); if ($('#v-credits').classList.contains('active')) drawCredits(); if ($('#v-admin').classList.contains('active')) drawAdminCharts(); }, 60);
+    });
+    $('#rm-toggle').addEventListener('change', e => { document.body.classList.toggle('reduce-motion', e.target.checked); toast('Erişilebilirlik', e.target.checked ? 'Hareket azaltıldı.' : 'Hareket geri açıldı.', 'info'); });
+  }
+
+  /* ---------------- TANITIM TURU ---------------- */
+  const TOUR_STEPS = [
+    { sel: '#side-nav', title: 'Sol menü', text: 'Tüm bölümlere buradan geçersin. Bir bölümün ne işe yaradığını görmek için üzerine gelmen yeterli.' },
+    { sel: '.nav-item[data-view="chat"]', title: 'AI Sohbet', text: 'Yapay zekaya mesajlaşma gibi soru sorabilir, metin yazdırabilir, özet çıkartabilirsin. Ne yazacağını bilmesen de hazır öneriler çıkar.' },
+    { sel: '.nav-item[data-view="solutions"]', title: 'Hazır araçlar', text: 'Operasyonel AI\'da tek tıkla çalışan araçlar var: dosya oku, sesi yazıya çevir, çeviri yap — form doldur, çalıştır, bitti.' },
+    { sel: '#credit-pill', title: 'Kredin', text: 'Bu, kalan kullanım hakkını gösterir. Her işlem biraz kredi harcar; her gece yeniden dolar.' },
+    { sel: '#help-btn', title: 'Yardım hep burada', text: 'Takıldığında bu turu tekrar başlatabilir, terimlerin anlamına bakabilir ve yazıyı büyütebilirsin.' },
+  ];
+  let tourIdx = 0;
+  function tourDone(v) { try { return v === undefined ? localStorage.getItem('taihub_tour') === '1' : localStorage.setItem('taihub_tour', '1'); } catch (e) { return false; } }
+  function startTour() { tourIdx = 0; $('#tour').hidden = false; $('#tooltip').hidden = true; showTourStep(); }
+  function endTour() { $('#tour').hidden = true; tourDone(1); }
+  function showTourStep() {
+    const st = TOUR_STEPS[tourIdx]; const elm = $(st.sel); if (!elm) { endTour(); return; }
+    elm.scrollIntoView({ block: 'nearest' });
+    const r = elm.getBoundingClientRect(), pad = 8, ring = $('#tour-ring');
+    ring.style.left = (r.left - pad) + 'px'; ring.style.top = (r.top - pad) + 'px';
+    ring.style.width = (r.width + pad * 2) + 'px'; ring.style.height = (r.height + pad * 2) + 'px';
+    $('#tp-step').textContent = `Adım ${tourIdx + 1} / ${TOUR_STEPS.length}`;
+    $('#tp-title').textContent = st.title; $('#tp-text').textContent = st.text;
+    $('#tp-prev').style.visibility = tourIdx === 0 ? 'hidden' : 'visible';
+    $('#tp-next').textContent = tourIdx === TOUR_STEPS.length - 1 ? 'Bitir' : 'İleri';
+    const pop = $('#tp-pop') || $('#tour-pop'); const pw = 306, ph = pop.offsetHeight || 170;
+    let left = r.right + 16, top = r.top;
+    if (left + pw > innerWidth - 12) { left = r.left; top = r.bottom + 16; }
+    if (left + pw > innerWidth - 12) left = innerWidth - pw - 12;
+    if (left < 12) left = 12;
+    if (top + ph > innerHeight - 12) top = Math.max(12, innerHeight - ph - 12);
+    pop.style.left = left + 'px'; pop.style.top = top + 'px';
+  }
+  function initTour() {
+    $('#tp-next').addEventListener('click', () => { if (tourIdx >= TOUR_STEPS.length - 1) { endTour(); toast('Hazırsın! 🎉', 'İstediğin zaman sağ üstteki ? ile tekrar bakabilirsin.', 'ok'); } else { tourIdx++; showTourStep(); } });
+    $('#tp-prev').addEventListener('click', () => { if (tourIdx > 0) { tourIdx--; showTourStep(); } });
+    $('#tp-skip').addEventListener('click', endTour);
+    window.addEventListener('resize', () => { if (!$('#tour').hidden) showTourStep(); });
+  }
+  function maybeStartTour() { if (tourDone()) return; setTimeout(() => { if (!$('#app').classList.contains('hidden')) startTour(); }, 750); }
+
+  /* ---------------- İLK ADIMLAR REHBERİ ---------------- */
+  const OSTEPS = [
+    { t: 'Hesabını bağladın', d: 'Kurumsal giriş tamam', done: true, go: null },
+    { t: 'İlk sohbetini başlat', d: 'AI Sohbet\'i dene', done: false, go: 'chat' },
+    { t: 'Bir araç çalıştır', d: 'Operasyonel AI', done: false, go: 'solutions' },
+    { t: 'Eğitime göz at', d: '"Platform 101"', done: false, go: 'training' },
+  ];
+  function renderOnboard() {
+    const box = $('#onboard-steps'); if (!box) return;
+    box.innerHTML = OSTEPS.map((s, i) => `<button class="step ${s.done ? 'done' : ''}" data-i="${i}"><span class="st-check">✓</span><span><span class="st-t">${s.t}</span><span class="st-d">${s.d}</span></span></button>`).join('');
+    const done = OSTEPS.filter(s => s.done).length;
+    $('#onboard-bar').style.width = (done / OSTEPS.length * 100) + '%';
+    $('#onboard-count').textContent = `${done}/${OSTEPS.length} adım tamamlandı`;
+    box.querySelectorAll('.step').forEach(b => b.addEventListener('click', () => { const s = OSTEPS[b.dataset.i]; if (s.go) { s.done = true; renderOnboard(); goto(s.go); } }));
+  }
+  $('#onboard-dismiss') && $('#onboard-dismiss').addEventListener('click', () => { $('#onboard').style.display = 'none'; });
+
   /* ---------------- INIT ---------------- */
   renderDashboard(); renderShowcase(); renderAgents(); renderLibraries(); renderSolutions();
   renderMcp(); renderTraining(); renderCreditsStatic(); renderHistory(); renderAdmin();
   renderChat(); initChat();
-  initStars();
+  initStars(); initTooltips(); initHelp(); initTour(); renderOnboard();
   redrawRings();
   window.addEventListener('resize', () => { redrawRings(); if ($('#v-credits').classList.contains('active')) drawCredits(); if ($('#v-admin').classList.contains('active')) drawAdminCharts(); });
 })();

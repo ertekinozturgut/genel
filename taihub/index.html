@@ -76,23 +76,23 @@
     </div>
 
     <nav class="side-nav" id="side-nav">
-      <button class="nav-item active" data-view="dashboard"><span class="ico">◧</span>Ana Sayfa</button>
-      <button class="nav-item" data-view="chat"><span class="ico">💬</span>AI Sohbet</button>
-      <button class="nav-item" data-view="solutions"><span class="ico">⚡</span>Operasyonel AI</button>
-      <button class="nav-item" data-view="agents"><span class="ico">🤖</span>Copilot Ajanları</button>
+      <button class="nav-item active" data-view="dashboard" data-help="Başlangıç ekranı — kredin, kısayollar ve öne çıkanlar burada."><span class="ico">◧</span>Ana Sayfa</button>
+      <button class="nav-item" data-view="chat" data-help="Yapay zekaya mesajlaşma gibi soru sor, yazdır, özetlet."><span class="ico">💬</span>AI Sohbet</button>
+      <button class="nav-item" data-view="solutions" data-help="Tek tıkla çalışan hazır araçlar: dosya oku, sesi yazıya çevir, çeviri yap."><span class="ico">⚡</span>Operasyonel AI</button>
+      <button class="nav-item" data-view="agents" data-help="Belirli konularda uzman, hazır kurulu yardımcılar (İK, BT, Satış…)."><span class="ico">🤖</span>Copilot Ajanları</button>
 
       <div class="nav-section">Keşfet</div>
-      <button class="nav-item" data-view="showcase"><span class="ico">✦</span>AI Vitrini</button>
-      <button class="nav-item" data-view="libraries"><span class="ico">📚</span>Kütüphaneler</button>
-      <button class="nav-item" data-view="mcp"><span class="ico">🔌</span>MCP Hub</button>
-      <button class="nav-item" data-view="training"><span class="ico">🎓</span>Eğitim Merkezi</button>
+      <button class="nav-item" data-view="showcase" data-help="Kurumda üretilen tüm AI çözümlerinin sergilendiği vitrin."><span class="ico">✦</span>AI Vitrini</button>
+      <button class="nav-item" data-view="libraries" data-help="Hazır prompt, kural ve şablonlar — kopyala, sohbette kullan."><span class="ico">📚</span>Kütüphaneler</button>
+      <button class="nav-item" data-view="mcp" data-help="Yapay zekayı kurumsal sistemlere bağlayan araç kutuları."><span class="ico">🔌</span>MCP Hub</button>
+      <button class="nav-item" data-view="training" data-help="AI'ı öğrenmek için kısa video ve dersler, ilerleme takibi."><span class="ico">🎓</span>Eğitim Merkezi</button>
 
       <div class="nav-section">Hesabım</div>
-      <button class="nav-item" data-view="credits"><span class="ico">◍</span>Kredi &amp; Kullanım</button>
-      <button class="nav-item" data-view="history"><span class="ico">🕑</span>Geçmişim</button>
+      <button class="nav-item" data-view="credits" data-help="Kalan kredin, harcama grafiğin ve ek kredi talebi."><span class="ico">◍</span>Kredi &amp; Kullanım</button>
+      <button class="nav-item" data-view="history" data-help="Önceki sohbetlerin ve AI kullanımların — kaldığın yerden devam et."><span class="ico">🕑</span>Geçmişim</button>
 
       <div class="nav-section">Yönetim</div>
-      <button class="nav-item" data-view="admin"><span class="ico">⚙</span>Yönetim Paneli<span class="nav-badge">4</span></button>
+      <button class="nav-item" data-view="admin" data-help="Yöneticiler için: kullanıcılar, krediler, modeller ve raporlar."><span class="ico">⚙</span>Yönetim Paneli<span class="nav-badge">4</span></button>
     </nav>
 
     <div class="side-foot">
@@ -112,23 +112,59 @@
         <input type="text" placeholder="Sohbet, kütüphane, vitrin, eğitim içinde ara…">
       </div>
       <div class="top-actions">
-        <div class="credit-pill" title="Kalan günlük kredi">
+        <div class="credit-pill" id="credit-pill" data-help="Kredi, yapay zeka kullanımının ölçü birimidir. Her sohbet veya çözüm bir miktar kredi harcar; her gece yeniden dolar. Bittiğinde ek kredi talep edebilirsin.">
           <canvas class="cp-ring" id="cp-ring" width="52" height="52"></canvas>
           <div class="cp-meta"><b id="cp-val">1.840</b><span>kredi</span></div>
         </div>
+        <button class="icon-btn" id="help-btn" title="Yardım ve tanıtım turu" aria-label="Yardım">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="12" r="9.2"/><path d="M9.4 9.2a2.6 2.6 0 0 1 5 .9c0 1.7-2.4 2-2.4 3.6" stroke-linecap="round"/><path d="M12 17.2h.01" stroke-linecap="round"/></svg>
+        </button>
         <button class="icon-btn" id="theme-btn" title="Tema">
           <svg id="theme-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M4 12H2M22 12h-2M5 5l1.5 1.5M17.5 17.5 19 19M19 5l-1.5 1.5M6.5 17.5 5 19"/></svg>
         </button>
-        <button class="icon-btn" id="notif-btn" title="Bildirimler">
+        <button class="icon-btn" id="notif-btn" title="Bildirimler" aria-label="Bildirimler">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
           <span class="badge">4</span>
         </button>
       </div>
     </header>
+    <div class="nav-progress" id="nav-progress"></div>
 
     <div class="popover" id="notif-pop">
       <div class="popover-head">Bildirimler <button class="btn ghost sm" id="notif-clear">Tümünü okundu işaretle</button></div>
       <div id="notif-list"></div>
+    </div>
+
+    <div class="popover help-pop" id="help-pop">
+      <div class="popover-head">Yardım</div>
+      <div class="help-body">
+        <button class="help-cta" id="tour-start">
+          <span class="hc-ic">🧭</span>
+          <span><b>Platform turunu başlat</b><small>Ekranları adım adım tanıtır (1 dk)</small></span>
+        </button>
+
+        <div class="help-row">
+          <span class="hr-label">Yazı boyutu</span>
+          <div class="seg" id="text-size">
+            <button class="seg-btn active" data-ts="normal">Normal</button>
+            <button class="seg-btn" data-ts="large">Büyük</button>
+          </div>
+        </div>
+        <label class="help-row toggle-row" style="cursor:pointer">
+          <span class="hr-label">Hareketi azalt<small>Animasyonları en aza indirir</small></span>
+          <input type="checkbox" id="rm-toggle"><span class="toggle-ui"></span>
+        </label>
+
+        <div class="help-dict-title">Kısa sözlük</div>
+        <div class="help-dict">
+          <div class="hd-item"><b>Kredi</b><span>AI kullanımının ölçü birimi. Her işlem bir miktar kredi harcar, her gece yenilenir.</span></div>
+          <div class="hd-item"><b>Sohbet</b><span>Yapay zekaya soru sorup yazışabileceğin ekran — mesajlaşma gibi.</span></div>
+          <div class="hd-item"><b>Operasyonel AI</b><span>Hazır, tek tıkla çalışan araçlar: dosya oku, sesi yazıya çevir, çeviri yap…</span></div>
+          <div class="hd-item"><b>Ajan</b><span>Belirli bir konuda uzman, hazır kurulmuş yapay zeka yardımcısı (ör. İK Asistanı).</span></div>
+          <div class="hd-item"><b>MCP</b><span>Yapay zekayı kurumsal sistemlere (SAP, SharePoint…) güvenle bağlayan araç kutusu.</span></div>
+          <div class="hd-item"><b>Guardrail</b><span>Gizli/kişisel verileri koruyan otomatik güvenlik kuralları.</span></div>
+        </div>
+      </div>
     </div>
 
     <div class="content" id="content">
@@ -137,7 +173,16 @@
       <section class="view active" id="v-dashboard">
         <div class="page-head">
           <h2>Merhaba Ertekin 👋</h2>
-          <p>Platformdaki tüm yeteneklere buradan erişebilir, kullanım durumunu tek bakışta görebilirsin.</p>
+          <p>Platformdaki tüm yeteneklere buradan erişebilir, kullanım durumunu tek bakışta görebilirsin. İlk kez mi buradasın? Sağ üstteki <b>?</b> ile tanıtım turunu başlatabilirsin.</p>
+        </div>
+
+        <div class="card onboard" id="onboard">
+          <div class="onboard-head">
+            <div><b>İlk adımların</b><span id="onboard-count">4 adımdan 1'i tamamlandı</span></div>
+            <button class="btn ghost sm" id="onboard-dismiss" aria-label="Kapat">Gizle</button>
+          </div>
+          <div class="bar ok" style="margin:2px 0 4px"><i id="onboard-bar" style="width:25%"></i></div>
+          <div class="steps" id="onboard-steps"></div>
         </div>
 
         <div class="grid g-2" style="grid-template-columns:1.5fr 1fr;">
@@ -197,9 +242,9 @@
                 </button>
                 <div class="model-menu" id="model-menu"></div>
               </div>
-              <div class="guardrail-note">
+              <div class="guardrail-note" data-help="Guardrail: gizli ve kişisel verileri (TC, IBAN vb.) otomatik koruyan güvenlik kuralları. Konuşmalar kurumsal olarak kayıt altına alınır.">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2 4 5v6c0 5 3.5 8 8 11 4.5-3 8-6 8-11V5z"/></svg>
-                Guardrail aktif · konuşmalar loglanıyor
+                Güvenlik açık · konuşmalar korunuyor
               </div>
               <span class="spacer" style="flex:1"></span>
               <button class="btn ghost sm">Paylaş</button>
@@ -366,6 +411,26 @@
 
 <div class="modal-backdrop" id="modal"><div class="modal" id="modal-inner"></div></div>
 <div class="toast-wrap" id="toast-wrap"></div>
+
+<!-- Tanıtım turu -->
+<div class="tour" id="tour" hidden>
+  <div class="tour-ring" id="tour-ring"></div>
+  <div class="tour-pop" id="tour-pop">
+    <div class="tp-step" id="tp-step"></div>
+    <h4 id="tp-title"></h4>
+    <p id="tp-text"></p>
+    <div class="tp-foot">
+      <button class="btn ghost sm" id="tp-skip">Turu atla</button>
+      <div class="tp-nav">
+        <button class="btn outline sm" id="tp-prev">Geri</button>
+        <button class="btn primary sm" id="tp-next">İleri</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Jargon ipucu balonu -->
+<div class="tooltip" id="tooltip" hidden></div>
 
 <script src="script.js"></script>
 </body>
