@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>T-AI Hub — Kurumsal Yapay Zeka Platformu</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<canvas id="bg-stars"></canvas>
+<div class="grid-overlay"></div>
+<div class="scanlines"></div>
+
+<!-- ============ LOGIN ============ -->
+<div class="login" id="login">
+  <div class="login-hero">
+    <div class="lh-brand">
+      <div class="brand-mark">T</div>
+      <b>T-AI Hub</b>
+    </div>
+    <div>
+      <h1>Kurumsal yapay zekaya tek güvenli kapı.</h1>
+      <p>Çoklu model sohbet, operasyonel AI çözümleri, Copilot ajanları ve MCP sunucuları — hepsi kurumsal kimliğinle, denetlenebilir ve kredi ile ölçülen tek platformda.</p>
+      <div class="lh-points">
+        <div class="lh-point"><span class="lp-ic">🔒</span> Entra ID SSO ile güvenli erişim</div>
+        <div class="lh-point"><span class="lp-ic">⚡</span> GPT, Claude, Llama, Mistral ve daha fazlası</div>
+        <div class="lh-point"><span class="lp-ic">📊</span> Kredi bazlı şeffaf kullanım</div>
+      </div>
+    </div>
+    <div class="lh-foot">Toyota Türkiye · T-AI Hub v1.0 · Provider bağımsız mimari</div>
+  </div>
+
+  <div class="login-form">
+    <div class="login-card">
+      <h2>Platforma giriş</h2>
+      <p>Kurumsal hesabınla tek tıkla giriş yap.</p>
+
+      <button class="sso-btn" id="sso-btn">
+        <span class="ms-logo"><i></i><i></i><i></i><i></i></span>
+        Toyota hesabınla giriş yap
+      </button>
+
+      <div class="login-or">veya</div>
+
+      <div class="static-toggle">
+        <button id="static-toggle">Statik kullanıcı girişi (dış/servis hesabı)</button>
+      </div>
+
+      <form class="static-form" id="static-form">
+        <div class="field">
+          <label>E-posta</label>
+          <input class="input" type="email" placeholder="ad.soyad@toyota.com.tr" value="danisman@partner.com">
+        </div>
+        <div class="field">
+          <label>Şifre</label>
+          <input class="input" type="password" placeholder="••••••••" value="demoParola">
+        </div>
+        <button type="submit" class="btn primary block">Giriş yap</button>
+      </form>
+
+      <div class="login-note">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+        Bu platformdaki tüm AI etkileşimleri güvenlik ve KVKK uyumu amacıyla kurumsal olarak loglanır.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ APP ============ -->
+<div class="app hidden" id="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="side-brand">
+      <div class="brand-mark">T</div>
+      <div class="brand-tt"><b>T-AI Hub</b><span>Toyota Türkiye</span></div>
+    </div>
+
+    <nav class="side-nav" id="side-nav">
+      <button class="nav-item active" data-view="dashboard" data-help="Başlangıç ekranı — kredin, kısayollar ve öne çıkanlar burada."><span class="ico">◧</span>Ana Sayfa</button>
+      <button class="nav-item" data-view="chat" data-help="Yapay zekaya mesajlaşma gibi soru sor, yazdır, özetlet."><span class="ico">💬</span>AI Sohbet</button>
+      <button class="nav-item" data-view="solutions" data-help="Tek tıkla çalışan hazır araçlar: dosya oku, sesi yazıya çevir, çeviri yap."><span class="ico">⚡</span>Operasyonel AI</button>
+      <button class="nav-item" data-view="azure" data-help="Kullanıma hazır Azure AI servisleri — Document Intelligence, Video Indexer, Speech ve chat deneyimi."><span class="ico">☁</span>Azure Çözümleri</button>
+      <button class="nav-item" data-view="agents" data-help="Belirli konularda uzman, hazır kurulu yardımcılar (İK, BT, Satış…)."><span class="ico">🤖</span>Copilot Ajanları</button>
+
+      <div class="nav-section">Keşfet</div>
+      <button class="nav-item" data-view="showcase" data-help="Kurumda üretilen tüm AI çözümlerinin sergilendiği vitrin."><span class="ico">✦</span>AI Vitrini</button>
+      <button class="nav-item" data-view="libraries" data-help="Hazır prompt, kural ve şablonlar — kopyala, sohbette kullan."><span class="ico">📚</span>Kütüphaneler</button>
+      <button class="nav-item" data-view="mcp" data-help="Yapay zekayı kurumsal sistemlere bağlayan araç kutuları."><span class="ico">🔌</span>MCP Hub</button>
+      <button class="nav-item" data-view="n8n" data-help="Görsel iş akışı otomasyonu paneli (n8n)."><span class="ico">🔀</span>n8n Akışları</button>
+      <button class="nav-item" data-view="training" data-help="AI'ı öğrenmek için kısa video ve dersler, ilerleme takibi."><span class="ico">🎓</span>Eğitim Merkezi</button>
+
+      <div class="nav-section">Hesabım</div>
+      <button class="nav-item" data-view="credits" data-help="Kalan kredin, harcama grafiğin ve ek kredi talebi."><span class="ico">◍</span>Kredi &amp; Kullanım</button>
+      <button class="nav-item" data-view="history" data-help="Önceki sohbetlerin ve AI kullanımların — kaldığın yerden devam et."><span class="ico">🕑</span>Geçmişim</button>
+      <button class="nav-item" data-view="feedback" data-help="Platform hakkında görüş ve önerini paylaş."><span class="ico">✎</span>Görüş &amp; Öneri</button>
+
+      <div class="nav-section">Yönetim</div>
+      <button class="nav-item" data-view="admin" data-help="Yöneticiler için: kullanıcılar, krediler, modeller ve raporlar."><span class="ico">⚙</span>Yönetim Paneli<span class="nav-badge">4</span></button>
+    </nav>
+
+    <div class="side-foot">
+      <div class="side-user">
+        <div class="avatar">EÖ</div>
+        <div class="u-meta"><b>Ertekin Öztürgüt</b><span>Süper Admin · Mühendislik</span></div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <button class="menu-btn" id="menu-btn">☰</button>
+      <span class="page-title" id="page-title">Ana Sayfa</span>
+      <div class="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <input type="text" placeholder="Sohbet, kütüphane, vitrin, eğitim içinde ara…">
+      </div>
+      <div class="top-actions">
+        <div class="credit-pill" id="credit-pill" data-help="Kredi, yapay zeka kullanımının ölçü birimidir. Her sohbet veya çözüm bir miktar kredi harcar; her gece yeniden dolar. Bittiğinde ek kredi talep edebilirsin.">
+          <canvas class="cp-ring" id="cp-ring" width="52" height="52"></canvas>
+          <div class="cp-meta"><b id="cp-val">1.840</b><span>kredi</span></div>
+        </div>
+        <button class="icon-btn" id="help-btn" title="Yardım ve tanıtım turu" aria-label="Yardım">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="12" r="9.2"/><path d="M9.4 9.2a2.6 2.6 0 0 1 5 .9c0 1.7-2.4 2-2.4 3.6" stroke-linecap="round"/><path d="M12 17.2h.01" stroke-linecap="round"/></svg>
+        </button>
+        <button class="icon-btn" id="mode-btn" title="Açık / koyu tema" aria-label="Açık veya koyu tema">
+          <svg id="mode-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"></svg>
+        </button>
+        <button class="icon-btn" id="theme-btn" title="Vurgu rengi: kırmızı / cyan" aria-label="Vurgu rengi">
+          <svg id="theme-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M4 12H2M22 12h-2M5 5l1.5 1.5M17.5 17.5 19 19M19 5l-1.5 1.5M6.5 17.5 5 19"/></svg>
+        </button>
+        <button class="icon-btn" id="notif-btn" title="Bildirimler" aria-label="Bildirimler">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+          <span class="badge">4</span>
+        </button>
+      </div>
+    </header>
+    <div class="nav-progress" id="nav-progress"></div>
+
+    <div class="popover" id="notif-pop">
+      <div class="popover-head">Bildirimler <button class="btn ghost sm" id="notif-clear">Tümünü okundu işaretle</button></div>
+      <div id="notif-list"></div>
+    </div>
+
+    <div class="popover help-pop" id="help-pop">
+      <div class="popover-head">Yardım</div>
+      <div class="help-body">
+        <button class="help-cta" id="tour-start">
+          <span class="hc-ic">🧭</span>
+          <span><b>Platform turunu başlat</b><small>Ekranları adım adım tanıtır (1 dk)</small></span>
+        </button>
+
+        <div class="help-row">
+          <span class="hr-label">Yazı boyutu</span>
+          <div class="seg" id="text-size">
+            <button class="seg-btn active" data-ts="normal">Normal</button>
+            <button class="seg-btn" data-ts="large">Büyük</button>
+          </div>
+        </div>
+        <label class="help-row toggle-row" style="cursor:pointer">
+          <span class="hr-label">Hareketi azalt<small>Animasyonları en aza indirir</small></span>
+          <input type="checkbox" id="rm-toggle"><span class="toggle-ui"></span>
+        </label>
+
+        <div class="help-dict-title">Kısa sözlük</div>
+        <div class="help-dict">
+          <div class="hd-item"><b>Kredi</b><span>AI kullanımının ölçü birimi. Her işlem bir miktar kredi harcar, her gece yenilenir.</span></div>
+          <div class="hd-item"><b>Sohbet</b><span>Yapay zekaya soru sorup yazışabileceğin ekran — mesajlaşma gibi.</span></div>
+          <div class="hd-item"><b>Operasyonel AI</b><span>Hazır, tek tıkla çalışan araçlar: dosya oku, sesi yazıya çevir, çeviri yap…</span></div>
+          <div class="hd-item"><b>Ajan</b><span>Belirli bir konuda uzman, hazır kurulmuş yapay zeka yardımcısı (ör. İK Asistanı).</span></div>
+          <div class="hd-item"><b>MCP</b><span>Yapay zekayı kurumsal sistemlere (SAP, SharePoint…) güvenle bağlayan araç kutusu.</span></div>
+          <div class="hd-item"><b>Guardrail</b><span>Gizli/kişisel verileri koruyan otomatik güvenlik kuralları.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content" id="content">
+
+      <!-- ===== DASHBOARD ===== -->
+      <section class="view active" id="v-dashboard">
+        <div class="page-head">
+          <h2>Merhaba Ertekin 👋</h2>
+          <p>Platformdaki tüm yeteneklere buradan erişebilir, kullanım durumunu tek bakışta görebilirsin. İlk kez mi buradasın? Sağ üstteki <b>?</b> ile tanıtım turunu başlatabilirsin.</p>
+        </div>
+
+        <div class="card onboard" id="onboard">
+          <div class="onboard-head">
+            <div><b>İlk adımların</b><span id="onboard-count">4 adımdan 1'i tamamlandı</span></div>
+            <button class="btn ghost sm" id="onboard-dismiss" aria-label="Kapat">Gizle</button>
+          </div>
+          <div class="bar ok" style="margin:2px 0 4px"><i id="onboard-bar" style="width:25%"></i></div>
+          <div class="steps" id="onboard-steps"></div>
+        </div>
+
+        <div class="grid g-2" style="grid-template-columns:1.5fr 1fr;">
+          <div class="card hero-credit">
+            <canvas class="hc-ring" id="hc-ring" width="176" height="176"></canvas>
+            <div class="hc-info">
+              <h3>Kalan günlük kredi</h3>
+              <div class="hc-big"><span class="tnum">1.840</span> <span style="font-size:16px;color:var(--text-3)">/ 3.000</span></div>
+              <div class="hc-sub">Her gece 00:00'da yenilenir · Bonus cüzdan: 500 kredi</div>
+              <div style="margin-top:14px;display:flex;gap:8px">
+                <button class="btn outline sm" data-goto="credits">Kullanım detayı</button>
+                <button class="btn ghost sm" data-goto="credits">Ek kredi talep et</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head"><h3>Hızlı başlat</h3></div>
+            <div class="quick-row" style="flex-direction:column">
+              <button class="quick-btn" data-goto="chat"><span class="qb-ic">💬</span> Yeni sohbet başlat</button>
+              <button class="quick-btn" data-goto="solutions"><span class="qb-ic">📄</span> Dokümandan veri okuma</button>
+              <button class="quick-btn" data-goto="solutions"><span class="qb-ic">🎧</span> Sesten metne çevir</button>
+              <button class="quick-btn" data-goto="chat"><span class="qb-ic">↩</span> Son sohbete devam et</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-title">Öne çıkan kurumsal çözümler</div>
+        <div class="grid g-4" id="dash-showcase"></div>
+
+        <div class="grid g-2" style="margin-top:24px">
+          <div class="panel">
+            <div class="panel-head"><h3>Duyurular</h3></div>
+            <div id="dash-announce"></div>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><h3>Eğitim ilerlemem</h3><span class="link" data-goto="training">Tümü</span></div>
+            <div id="dash-training"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== CHAT ===== -->
+      <section class="view full" id="v-chat">
+        <div class="chat-layout">
+          <div class="chat-side">
+            <div class="cs-head"><button class="btn primary block" id="new-chat">+ Yeni sohbet</button></div>
+            <div class="cs-list" id="chat-list"></div>
+          </div>
+          <div class="chat-main">
+            <div class="chat-bar">
+              <div class="model-select">
+                <button class="model-btn" id="model-btn">
+                  <span class="m-logo" id="mb-logo" style="background:#10a37f">G4</span>
+                  <span id="mb-name">GPT-4o</span>
+                  <span class="chevd">▾</span>
+                </button>
+                <div class="model-menu" id="model-menu"></div>
+              </div>
+              <div class="guardrail-note" data-help="Guardrail: gizli ve kişisel verileri (TC, IBAN vb.) otomatik koruyan güvenlik kuralları. Konuşmalar kurumsal olarak kayıt altına alınır.">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2 4 5v6c0 5 3.5 8 8 11 4.5-3 8-6 8-11V5z"/></svg>
+                Güvenlik açık · konuşmalar korunuyor
+              </div>
+              <span class="spacer" style="flex:1"></span>
+              <button class="btn ghost sm">Paylaş</button>
+            </div>
+            <div class="chat-scroll" id="chat-scroll">
+              <div class="chat-inner" id="chat-inner"></div>
+            </div>
+            <div class="composer">
+              <div class="composer-inner" style="position:relative">
+                <div class="palette" id="palette"></div>
+                <div class="composer-box">
+                  <textarea id="composer-input" rows="1" placeholder="Bir mesaj yaz…  ( /  ile prompt kütüphanesini aç )"></textarea>
+                  <div class="composer-tools">
+                    <button class="ct" title="Dosya ekle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.5 12.5 21a5 5 0 0 1-7-7l8.5-8.5a3.5 3.5 0 0 1 5 5L10.5 18a1.5 1.5 0 0 1-2-2l7.5-7.5"/></svg></button>
+                    <button class="ct" title="Prompt kütüphanesi" id="palette-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16M4 12h16M4 19h10"/></svg></button>
+                    <button class="btn primary sm composer-send" id="send-btn">Gönder</button>
+                  </div>
+                </div>
+                <div class="composer-hint">Yanıtlar model tarafından üretilir · her yanıtta kullanılan model, token ve kredi gösterilir.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== SOLUTIONS ===== -->
+      <section class="view" id="v-solutions">
+        <div class="page-head">
+          <h2>Operasyonel AI Çözümleri</h2>
+          <p>Sık tekrarlanan iş görevleri için form tabanlı, tek tıkla çalışan AI hizmetleri. Bir çözüm seç, formu doldur, sonucu al.</p>
+        </div>
+        <div id="solutions-catalog" class="grid g-3"></div>
+
+        <div id="solution-detail" style="display:none">
+          <button class="btn outline sol-back-btn" id="sol-back">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+            Tüm çözümlere dön
+          </button>
+          <div class="page-head" style="display:flex;align-items:center;gap:14px">
+            <div class="sol-detail-ico" id="sol-detail-ico"></div>
+            <div><h2 id="sol-title"></h2><p id="sol-desc"></p></div>
+          </div>
+          <div class="solution-run">
+            <div class="panel">
+              <div class="panel-head"><h3>Giriş</h3></div>
+              <div id="sol-form"></div>
+              <button class="btn primary block" id="sol-run" style="margin-top:14px">Çalıştır</button>
+              <div class="composer-hint" style="text-align:left;margin-top:10px">Tahmini maliyet: <b id="sol-cost">8 kredi</b> · örnek dosya ve kullanım videosu bağlantısı çözüm sayfasında.</div>
+            </div>
+            <div class="panel run-result">
+              <div class="panel-head"><h3>Sonuç</h3><button class="btn ghost sm" id="sol-export" style="display:none">İndir</button></div>
+              <div id="sol-result" style="flex:1;display:flex;flex-direction:column">
+                <div class="run-empty">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+                  Formu doldurup <b>Çalıştır</b>'a bas — sonuç burada görünür.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== AGENTS ===== -->
+      <section class="view" id="v-agents">
+        <div class="page-head">
+          <h2>Copilot Studio Ajanları</h2>
+          <p>Kurumda geliştirilmiş Microsoft Copilot Studio ajanlarını tek listeden keşfet, platform içinden konuş. Kimliğin ajana SSO ile taşınır.</p>
+        </div>
+        <div class="filter-row" id="agents-filter"></div>
+        <div class="grid g-3" id="agents-catalog"></div>
+      </section>
+
+      <!-- ===== SHOWCASE ===== -->
+      <section class="view" id="v-showcase">
+        <div class="page-head">
+          <h2>AI Vitrini</h2>
+          <p>Kurumda üretilen tüm AI varlıkları — ajanlar, projeler, operasyonel çözümler ve MCP sunucuları — tek vitrinde. Farkındalık ve tekrar kullanım için.</p>
+        </div>
+        <div class="filter-row" id="showcase-filter"></div>
+        <div class="grid g-3" id="showcase-catalog"></div>
+      </section>
+
+      <!-- ===== LIBRARIES ===== -->
+      <section class="view" id="v-libraries">
+        <div class="page-head">
+          <h2>Kütüphaneler</h2>
+          <p>AI kullanım bilgisini kurumsal, aranabilir ve kopyalanabilir varlıklara dönüştür: prompt, skill, rule, guardrail, persona ve daha fazlası.</p>
+        </div>
+        <div class="tabs" id="lib-tabs"></div>
+        <div id="lib-content" class="grid g-3"></div>
+      </section>
+
+      <!-- ===== MCP ===== -->
+      <section class="view" id="v-mcp">
+        <div class="page-head">
+          <h2>MCP Hub</h2>
+          <p>Kurum içinde barındırılan MCP (Model Context Protocol) sunucularını keşfet, kişisel key üret ve kendi ajanlarına (Claude, VS Code, Copilot Studio, n8n) ekle. Her kullanım kişiye yazılır.</p>
+        </div>
+        <div class="tabs" id="mcp-tabs">
+          <button class="tab active" data-mcp="catalog">Katalog</button>
+          <button class="tab" data-mcp="keys">Key'lerim</button>
+        </div>
+        <div class="tabpane active" id="mcp-catalog"><div class="grid g-3" id="mcp-grid"></div></div>
+        <div class="tabpane" id="mcp-keys"><div class="panel"><div class="tbl-wrap"><table class="tbl" id="mcp-keys-tbl"></table></div></div></div>
+      </section>
+
+      <!-- ===== TRAINING ===== -->
+      <section class="view" id="v-training">
+        <div class="page-head">
+          <h2>Eğitim Merkezi</h2>
+          <p>AI okuryazarlığı ve platform kullanım eğitimleri. Sıralı öğrenme yolları, ilerleme takibi ve tamamlama rozetleri.</p>
+        </div>
+        <div class="grid g-3" id="training-paths"></div>
+        <div class="section-title">Devam eden: Etkili Prompt Yazımı</div>
+        <div class="panel" id="training-lessons"></div>
+      </section>
+
+      <!-- ===== CREDITS ===== -->
+      <section class="view" id="v-credits">
+        <div class="page-head">
+          <h2>Kredi ve Kullanımım</h2>
+          <p>Kalan kredin, tüketim eğilimin ve işlem dökümün. Kredin biterse gerekçeli ek kredi talebi açabilirsin.</p>
+        </div>
+        <div class="grid g-4" id="credit-stats"></div>
+        <div class="grid g-2" style="margin-top:16px;grid-template-columns:1.6fr 1fr">
+          <div class="panel">
+            <div class="panel-head"><h3>Haftalık tüketim</h3><span class="dim" style="font-size:12px">son 7 gün</span></div>
+            <canvas id="credit-chart" width="700" height="240"></canvas>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><h3>Ek kredi talebi</h3></div>
+            <div class="field"><label>Talep edilen kredi</label><input class="input" type="number" value="1000"></div>
+            <div class="field" style="margin-top:12px"><label>Gerekçe</label><textarea class="textarea" placeholder="Örn. çeyrek sonu raporlama için toplu doküman analizi…"></textarea></div>
+            <button class="btn primary block" id="credit-request" style="margin-top:14px">Talebi gönder</button>
+            <div class="composer-hint" style="text-align:left;margin-top:10px">Talebin Süper Admin'e bildirim olarak düşer, onay/red tek tıkla yapılır.</div>
+          </div>
+        </div>
+        <div class="panel" style="margin-top:16px">
+          <div class="panel-head"><h3>İşlem dökümü</h3></div>
+          <div class="tbl-wrap"><table class="tbl" id="credit-ledger"></table></div>
+        </div>
+      </section>
+
+      <!-- ===== HISTORY ===== -->
+      <section class="view" id="v-history">
+        <div class="page-head">
+          <h2>Geçmişim</h2>
+          <p>Sohbetlerin ve AI kullanımların. Sildiğin içerik arayüzden kalkar; güvenlik/denetim kopyası mevzuat süresince ayrı, erişimi kısıtlı depoda tutulur.</p>
+        </div>
+        <div class="filter-row" id="history-filter"></div>
+        <div class="panel"><div class="tbl-wrap"><table class="tbl" id="history-tbl"></table></div></div>
+      </section>
+
+      <!-- ===== AZURE ÇÖZÜMLERİ ===== -->
+      <section class="view" id="v-azure">
+        <div class="page-head">
+          <h2>Azure AI Çözümleri</h2>
+          <p>Kullanıma hazır Azure AI servisleri. Bir servisi aç, dosyanı ver veya sohbet ederek sonucu al.</p>
+        </div>
+        <div class="grid g-3" id="azure-grid"></div>
+
+        <div id="azure-detail" style="display:none">
+          <button class="btn outline sol-back-btn" id="azure-back">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+            Tüm Azure servisleri
+          </button>
+          <div class="page-head" style="display:flex;align-items:center;gap:14px">
+            <div class="sol-detail-ico" id="azure-ico"></div>
+            <div><h2 id="azure-title"></h2><p id="azure-desc"></p></div>
+          </div>
+          <div class="panel" style="display:flex;flex-direction:column;height:520px;padding:0;overflow:hidden">
+            <div class="chat-scroll" style="flex:1"><div class="chat-inner" id="azure-chat" style="max-width:none"></div></div>
+            <div class="composer" style="border-radius:0">
+              <div class="composer-inner">
+                <div class="composer-box">
+                  <textarea id="azure-input" rows="1" placeholder="Bu servise bir soru sor veya dosya bağlamını yaz…"></textarea>
+                  <div class="composer-tools"><button class="btn primary sm composer-send" id="azure-send">Gönder</button></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== n8n ===== -->
+      <section class="view full" id="v-n8n">
+        <iframe id="n8n-frame" title="n8n" referrerpolicy="no-referrer"
+          style="width:100%;height:calc(100vh - var(--topbar-h));border:none;display:block;background:var(--surface-solid)"></iframe>
+      </section>
+
+      <!-- ===== GÖRÜŞ & ÖNERİ ===== -->
+      <section class="view" id="v-feedback">
+        <div class="page-head">
+          <h2>Görüş &amp; Öneri</h2>
+          <p>Platform hakkında düşüncelerini paylaş. Geri bildirimlerin ürün ekibine ve yöneticilere iletilir.</p>
+        </div>
+        <div class="grid g-2" style="grid-template-columns:1fr 1fr">
+          <div class="panel">
+            <div class="panel-head"><h3>Görüşünü paylaş</h3></div>
+            <div class="field" style="margin-bottom:12px"><label>Konu</label>
+              <select class="select" id="fb-topic"><option>Genel</option><option>AI Sohbet</option><option>Operasyonel AI</option><option>Kredi sistemi</option><option>Eğitim</option><option>Hata bildirimi</option><option>Yeni özellik önerisi</option></select></div>
+            <div class="field" style="margin-bottom:12px"><label>Memnuniyet</label><div class="rating" id="fb-rating"></div></div>
+            <div class="field" style="margin-bottom:12px"><label>Görüşün</label><textarea class="textarea" id="fb-text" placeholder="Neyi beğendin, neyi geliştirebiliriz?"></textarea></div>
+            <button class="btn primary block" id="fb-send">Gönder</button>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><h3>Son paylaşılanlar</h3></div>
+            <div id="fb-list"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== ADMIN ===== -->
+      <section class="view" id="v-admin">
+        <div class="page-head">
+          <h2>Yönetim Paneli</h2>
+          <p>Kullanıcılar, krediler, modeller, çözümler, ajanlar, MCP, içerik, guardrail politikaları, loglar ve dış API — tek yerden.</p>
+        </div>
+        <div class="admin-sub" id="admin-sub"></div>
+        <div id="admin-panes"></div>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="modal"><div class="modal" id="modal-inner"></div></div>
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<!-- Tanıtım turu -->
+<div class="tour" id="tour" hidden>
+  <div class="tour-ring" id="tour-ring"></div>
+  <div class="tour-pop" id="tour-pop">
+    <div class="tp-step" id="tp-step"></div>
+    <h4 id="tp-title"></h4>
+    <p id="tp-text"></p>
+    <div class="tp-foot">
+      <button class="btn ghost sm" id="tp-skip">Turu atla</button>
+      <div class="tp-nav">
+        <button class="btn outline sm" id="tp-prev">Geri</button>
+        <button class="btn primary sm" id="tp-next">İleri</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Jargon ipucu balonu -->
+<div class="tooltip" id="tooltip" hidden></div>
+
+<script src="script.js"></script>
+</body>
+</html>
