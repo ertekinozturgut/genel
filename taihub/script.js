@@ -1150,10 +1150,10 @@
   }
 
   /* ---------------- n8n ---------------- */
+  // Gömülecek n8n panelinin adresi — kendi n8n kurulumunun URL'i ile değiştir.
+  const N8N_URL = 'https://n8n.taihub.toyota.com.tr';
   function initN8n() {
-    const url = 'https://n8n.taihub.toyota.com.tr';
-    $('#n8n-open') && $('#n8n-open').addEventListener('click', () => window.open(url, '_blank'));
-    $('#n8n-open2') && $('#n8n-open2').addEventListener('click', () => window.open(url, '_blank'));
+    const f = $('#n8n-frame'); if (f) f.src = N8N_URL;
   }
 
   /* ---------------- GÖRÜŞ & ÖNERİ ---------------- */

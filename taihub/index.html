@@ -437,20 +437,8 @@
 
       <!-- ===== n8n ===== -->
       <section class="view full" id="v-n8n">
-        <div style="display:flex;flex-direction:column;height:calc(100vh - var(--topbar-h))">
-          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 24px;border-bottom:1px solid var(--border)">
-            <div><b style="font-family:var(--font-display);letter-spacing:.5px">n8n İŞ AKIŞLARI</b><div style="font-size:12px;color:var(--text-3)">Görsel otomasyon paneli · self-hosted</div></div>
-            <button class="btn outline sm" id="n8n-open">Yeni sekmede aç ↗</button>
-          </div>
-          <div id="n8n-frame-wrap" style="flex:1;position:relative;background:var(--surface-solid)">
-            <iframe id="n8n-frame" src="https://n8n.taihub.toyota.com.tr" style="width:100%;height:100%;border:none" referrerpolicy="no-referrer"></iframe>
-            <div id="n8n-fallback" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:24px;background:var(--surface-solid)">
-              <div style="font-size:40px">🔀</div>
-              <div style="max-width:44ch;color:var(--text-2);font-size:13.5px">n8n paneli buraya gömülür. Bu önizlemede güvenlik politikası dış çerçeveyi engelleyebilir — gerçek kurulumda panel burada açılır ya da yeni sekmede kullanılabilir.</div>
-              <button class="btn primary sm" id="n8n-open2">n8n'i yeni sekmede aç ↗</button>
-            </div>
-          </div>
-        </div>
+        <iframe id="n8n-frame" title="n8n" referrerpolicy="no-referrer"
+          style="width:100%;height:calc(100vh - var(--topbar-h));border:none;display:block;background:var(--surface-solid)"></iframe>
       </section>
 
       <!-- ===== GÖRÜŞ & ÖNERİ ===== -->
