@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #0b0d12;
+  --color-panel: #12151d;
+  --color-panel-2: #181c26;
+  --color-line: #252a37;
+  --color-ink: #e6e8ee;
+  --color-mute: #8b91a3;
+  --color-accent: #7c9cff;
+  --color-accent-2: #5eead4;
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+html, body { background: var(--color-bg); color: var(--color-ink); }
+body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
+::selection { background: color-mix(in oklab, var(--color-accent) 40%, transparent); }
+
+.card { @apply rounded-xl border border-line bg-panel; }
+.btn-primary { @apply inline-flex items-center gap-2 rounded-lg px-3.5 py-2 text-sm font-medium transition disabled:opacity-50 disabled:cursor-not-allowed bg-accent text-[#0b0d12] hover:brightness-110; }
+.btn-ghost { @apply inline-flex items-center gap-2 rounded-lg px-3.5 py-2 text-sm font-medium transition disabled:opacity-50 disabled:cursor-not-allowed border border-line text-ink hover:bg-panel-2; }
+.input { @apply w-full rounded-lg border border-line bg-panel-2 px-3 py-2 text-sm outline-none placeholder:text-mute focus:border-accent; }
+.chip { @apply inline-flex items-center rounded-md border border-line bg-panel-2 px-2 py-0.5 text-xs text-mute; }
+.label { @apply text-xs font-medium uppercase tracking-wide text-mute; }
+
+.prose-chat { line-height: 1.65; }
+.prose-chat p { margin: 0.5em 0; }
+.prose-chat ul, .prose-chat ol { margin: 0.5em 0; padding-left: 1.4em; }
+.prose-chat ul { list-style: disc; }
+.prose-chat ol { list-style: decimal; }
+.prose-chat h1, .prose-chat h2, .prose-chat h3 { font-weight: 600; margin: 0.8em 0 0.4em; }
+.prose-chat code { background: var(--color-panel-2); padding: 0.1em 0.35em; border-radius: 4px; font-size: 0.9em; }
+.prose-chat pre { background: var(--color-panel-2); padding: 0.8em; border-radius: 8px; overflow-x: auto; }
+.prose-chat table { border-collapse: collapse; margin: 0.6em 0; font-size: 0.9em; }
+.prose-chat th, .prose-chat td { border: 1px solid var(--color-line); padding: 0.35em 0.6em; text-align: left; }
+.prose-chat a { color: var(--color-accent); }
+
+.scroll-thin::-webkit-scrollbar { width: 8px; height: 8px; }
+.scroll-thin::-webkit-scrollbar-thumb { background: var(--color-line); border-radius: 8px; }
